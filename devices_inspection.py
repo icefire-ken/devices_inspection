@@ -48,11 +48,13 @@ def inspection(device_info, cmds_dict):
     ssh.disconnect()  # 关闭SSH连接
     t12 = time.time()  # 子线程执行计时结束点
     print('设备', device_info['host'], '巡检完成，用时', round(t12 - t11, 1), '秒。')  # 打印子线程执行共用时长
+    pool.release()  # 最大线程限制，释放一个线程
 
 
 if __name__ == '__main__':
     t1 = time.time()  # 程序执行计时起始点
     thread_list = []  # 创建一个列表，准备存放所有线程
+    pool = threading.BoundedSemaphore(100)  # 最大巡检线程控制
     print('巡检开始...')
     if not os.path.exists(localtime):  # 检查是否有同日期命名的相同文件夹
         os.makedirs(localtime)  # 如果没有，创建日期文件夹
@@ -60,6 +62,7 @@ if __name__ == '__main__':
         pre_device = threading.Thread(target=inspection, args=(device_info, get_cmds_info(info_path)))
         # 创建一个线程，执行inspection函数，传入当前遍历的设备登录信息和巡检命令字典
         thread_list.append(pre_device)  # 将当前创建的线程追加进列表
+        pool.acquire()  # 最大线程限制，获取一个线程
         pre_device.start()  # 开启这个线程
     for i in thread_list:  # 遍历所有创建的线程
         i.join()  # 等待所有线程的结束
