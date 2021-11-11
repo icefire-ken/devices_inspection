@@ -61,7 +61,7 @@ def inspection(device_info, cmds_dict):
         log.close()
     else:  # 如果登录正常，开始巡检
         f = open(os.getcwd() + '\\' + localtime + '\\' + device_info['host'] + '.log', 'w')  # 创建当前设备的log文件
-        print('设备', device_info['host'], '正在巡检...')  # 打印线程正在巡检的设备IP
+        print('设备', device_info['host'], '正在巡检...')  # 打印当前线程正在巡检的设备名称
         for c in cmds_dict[device_info['device_type']]:  # 从cmds_dict中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
             if type(c) == str:
                 f.write('=' * 10 + ' ' + c + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至log文件
@@ -80,8 +80,9 @@ if __name__ == '__main__':
     thread_list = []  # 创建一个列表，准备存放所有线程
     devices_info = get_devices_info(info_path)  # 读取所有设备信息
     cmds_info = get_cmds_info(info_path)  # 读取所有设备类型的巡检命令
-    pool = threading.BoundedSemaphore(300)  # 最大巡检线程控制
+    pool = threading.BoundedSemaphore(100)  # 最大巡检线程控制
     print('巡检开始...')  # 提示巡检开始
+    print('\n' + '=' * 30 + '\n')  # 打印一行“=”，隔开巡检提示信息
     if not os.path.exists(localtime):  # 检查是否有同日期命名的相同文件夹
         os.makedirs(localtime)  # 如果没有，创建日期文件夹
     else:  # 如果有
