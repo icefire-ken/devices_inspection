@@ -81,7 +81,7 @@ if __name__ == '__main__':
     devices_info = get_devices_info(info_path)  # 读取所有设备信息
     cmds_info = get_cmds_info(info_path)  # 读取所有设备类型的巡检命令
     pool = threading.BoundedSemaphore(100)  # 最大巡检线程控制
-    print('巡检开始...')  # 提示巡检开始
+    print('\n巡检开始...')  # 提示巡检开始
     print('\n' + '>' * 40 + '\n')  # 打印一行“=”，隔开巡检提示信息
     if not os.path.exists(localtime):  # 检查是否有同日期命名的相同文件夹
         os.makedirs(localtime)  # 如果没有，创建日期文件夹
