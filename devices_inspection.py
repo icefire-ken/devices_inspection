@@ -11,7 +11,7 @@ localtime = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 
 def get_devices_info(info_file):  # 获取信息文件中的设备登录信息
     try:
-        devices_dataframe = pandas.read_excel(info_file, sheet_name=0)  # 读取excel文件第一张表格的数据生成DataFrame
+        devices_dataframe = pandas.read_excel(info_file, sheet_name=0, dtype=str)  # 读取excel文件第一张表格的数据生成DataFrame
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
         # 'records'参数规定外层为列表，内层以列标题为key，以此列的行内容为value的字典
         # 若有多列，代表字典内有多个key:value对；若有多行，每行为一个字典
@@ -22,7 +22,7 @@ def get_devices_info(info_file):  # 获取信息文件中的设备登录信息
 
 def get_cmds_info(info_file):  # 获取信息文件中的巡检命令
     try:
-        cmds_dataframe = pandas.read_excel(info_file, sheet_name=1)  # 读取excel文件第二张表格的数据
+        cmds_dataframe = pandas.read_excel(info_file, sheet_name=1, dtype=str)  # 读取excel文件第二张表格的数据
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
         # 'list'参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
         # 若有多列，代表字典内有多个key:value对
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     cmds_info = get_cmds_info(info_path)  # 读取所有设备类型的巡检命令
     pool = threading.BoundedSemaphore(100)  # 最大巡检线程控制
     print('巡检开始...')  # 提示巡检开始
-    print('\n' + '=' * 30 + '\n')  # 打印一行“=”，隔开巡检提示信息
+    print('\n' + '>' * 40 + '\n')  # 打印一行“=”，隔开巡检提示信息
     if not os.path.exists(localtime):  # 检查是否有同日期命名的相同文件夹
         os.makedirs(localtime)  # 如果没有，创建日期文件夹
     else:  # 如果有
@@ -105,5 +105,5 @@ if __name__ == '__main__':
     else:  # 如果正常打开了巡检log文件
         logfilelines = len(logfile.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
     t2 = time.time()  # 程序执行计时结束点
-    print('\n' + '=' * 30 + '\n')  # 打印一行“=”，隔开巡检报告信息
+    print('\n' + '<' * 40 + '\n')  # 打印一行“=”，隔开巡检报告信息
     print(f'巡检结束，共巡检 {len(thread_list)} 台设备， {logfilelines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
