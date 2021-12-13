@@ -7,7 +7,7 @@ from netmiko.ssh_exception import AuthenticationException, NetmikoTimeoutExcepti
 
 info_path = 'info.xlsx'  # 给定信息文件
 localtime = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
-lock = threading.Lock()
+lock = threading.Lock()  # 线程锁实例化
 
 
 def get_devices_info(info_file):  # 获取信息文件中的设备登录信息
@@ -43,9 +43,9 @@ def inspection(device_info, cmds_dict):
         ssh.enable()  # 进入设备Enable模式
     except (AttributeError):  # 登录信息中缺失IP地址
         print(f'设备 {device_info["host"]} 登录信息错误！')  # 打印提示该设备登录信息错误
-        with lock:
-            log = open(os.getcwd() + '\\' + localtime + '\\' + '01log.log', 'a', encoding='utf-8')  # 创建log文件保存巡检报错的设备故障信息
-            log.write('设备 ' + device_info['host'] + ' 登录信息错误！\n')
+        with lock:  # 线程锁
+            log = open(os.getcwd() + '\\' + localtime + '\\' + '01log.log', 'a', encoding='utf-8')  # 创建log文件
+            log.write('设备 ' + device_info['host'] + ' 登录信息错误！\n')  # 保存巡检报错的设备故障信息
             log.close()
     except (NetmikoTimeoutException):  # 登录信息中IP地址不可达
         print(f'设备 {device_info["host"]} 管理地址或端口不可达！')
@@ -66,8 +66,7 @@ def inspection(device_info, cmds_dict):
             log.write('设备 ' + device_info['host'] + ' Enable密码错误！\n')
             log.close()
     else:  # 如果登录正常，开始巡检
-        f = open(os.getcwd() + '\\' + localtime + '\\' + device_info['host'] + '.log', 'w',
-                 encoding='utf-8')  # 创建当前设备的log文件
+        f = open(os.getcwd() + '\\' + localtime + '\\' + device_info['host'] + '.log', 'w', encoding='utf-8')  # 创建当前设备的log文件
         print('设备', device_info['host'], '正在巡检...')  # 打印当前线程正在巡检的设备名称
         for c in cmds_dict[device_info['device_type']]:  # 从cmds_dict中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
             if type(c) == str:
@@ -115,7 +114,8 @@ if __name__ == '__main__':
     except (FileNotFoundError):  # 如果找不到巡检log文件
         logfilelines = 0  # 证明没有出现巡检登录异常情况
     else:  # 如果正常打开了巡检log文件
-        logfilelines = len(logfile.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
+        logfilelines = len(
+            logfile.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
         logfile.close()
 
     t2 = time.time()  # 程序执行计时结束点
