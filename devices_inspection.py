@@ -114,8 +114,7 @@ if __name__ == '__main__':
     except (FileNotFoundError):  # 如果找不到巡检log文件
         logfilelines = 0  # 证明没有出现巡检登录异常情况
     else:  # 如果正常打开了巡检log文件
-        logfilelines = len(
-            logfile.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
+        logfilelines = len(logfile.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
         logfile.close()
 
     t2 = time.time()  # 程序执行计时结束点
