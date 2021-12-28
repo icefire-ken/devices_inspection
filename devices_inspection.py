@@ -84,9 +84,9 @@ def inspection(device_info, cmds_dict):
 if __name__ == '__main__':
     t1 = time.time()  # 程序执行计时起始点
     thread_list = []  # 创建一个列表，准备存放所有线程
+    pool = threading.BoundedSemaphore(100)  # 最大巡检线程控制
     devices_info = get_devices_info(info_path)  # 读取所有设备信息
     cmds_info = get_cmds_info(info_path)  # 读取所有设备类型的巡检命令
-    pool = threading.BoundedSemaphore(100)  # 最大巡检线程控制
 
     print('\n巡检开始...')  # 提示巡检开始
     print('\n' + '>' * 40 + '\n')  # 打印一行“=”，隔开巡检提示信息
