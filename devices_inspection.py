@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-import os, time, pandas, threading
+import os
+import time
+import pandas
+import threading
 from netmiko import ConnectHandler
 from netmiko.ssh_exception import AuthenticationException, NetmikoTimeoutException
 
@@ -64,6 +67,12 @@ def inspection(device_info, cmds_dict):
         with LOCK:
             log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
             log.write('设备 ' + device_info['host'] + ' Enable密码错误！\n')
+            log.close()
+    except (TimeoutError):  # Telnet登录超时
+        print(f'设备 {device_info["host"]} Telnet连接超时！')
+        with LOCK:
+            log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
+            log.write('设备 ' + device_info['host'] + ' Telnet连接超时！\n')
             log.close()
     else:  # 如果登录正常，开始巡检
         log_file = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + device_info['host'] + '.log', 'w', encoding='utf-8')  # 创建当前设备的log文件

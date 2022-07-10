@@ -18,6 +18,10 @@ python devices_inspection.py
 
 # 更新日志
 
+## 2022.06.21
+
+- 增加了对Telnet连接超时的异常捕获，并记录到日志文件中。
+
 ## 2021.12.28
 
 - 为项目添加requirements.txt文件，方便脚本移植。
