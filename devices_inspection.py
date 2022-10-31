@@ -17,10 +17,10 @@ def get_devices_info(info_file):  # 获取信息文件中的设备登录信息
     try:
         devices_dataframe = pandas.read_excel(info_file, sheet_name=0, dtype=str)  # 读取excel文件第一张表格的数据生成DataFrame
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
-        # 'records'参数规定外层为列表，内层以列标题为key，以此列的行内容为value的字典
+        # "records"参数规定外层为列表，内层以列标题为key，以此列的行内容为value的字典
         # 若有多列，代表字典内有多个key:value对；若有多行，每行为一个字典
         return devices_dict
-    except (FileNotFoundError):  # 如果没有配置信息文件或信息文件名称错误
+    except FileNotFoundError:  # 如果没有配置信息文件或信息文件名称错误
         print('没有找到info文件！')
 
 
@@ -28,65 +28,65 @@ def get_cmds_info(info_file):  # 获取信息文件中的巡检命令
     try:
         cmds_dataframe = pandas.read_excel(info_file, sheet_name=1, dtype=str)  # 读取excel文件第二张表格的数据
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
-        # 'list'参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
+        # "list"参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
         # 若有多列，代表字典内有多个key:value对
         return cmds_dict
-    except (FileNotFoundError):  # 如果没有配置信息文件或信息文件名称错误
+    except FileNotFoundError:  # 如果没有配置信息文件或信息文件名称错误
         print('没有找到info文件！')
-    except (ValueError):  # 信息文件缺少子表格信息
+    except ValueError:  # 信息文件缺少子表格信息
         print('info文件缺失子表格信息！')
 
 
-def inspection(device_info, cmds_dict):
+def inspection(login_info, cmds_dict):
     # 使用传入的参数设备登录信息和巡检命令，登录设备依次输入巡检命令，如果设备登录出现问题，生成log文件。
     t11 = time.time()  # 子线程执行计时起始点
 
     try:  # 尝试登录设备
-        ssh = ConnectHandler(**device_info)  # 使用当前设备登录信息，SSH登录设备
+        ssh = ConnectHandler(**login_info)  # 使用当前设备登录信息，SSH登录设备
         ssh.enable()  # 进入设备Enable模式
-    except (AttributeError):  # 登录信息中缺失IP地址
-        print(f'设备 {device_info["host"]} 登录信息错误！')  # 打印提示该设备登录信息错误
+    except AttributeError:  # 登录信息中缺失IP地址
+        print(f'设备 {login_info["host"]} 登录信息错误！')  # 打印提示该设备登录信息错误
         with LOCK:  # 线程锁
             log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')  # 创建log文件
-            log.write('设备 ' + device_info['host'] + ' 登录信息错误！\n')  # 保存巡检报错的设备故障信息
+            log.write('设备 ' + login_info['host'] + ' 登录信息错误！\n')  # 保存巡检报错的设备故障信息
             log.close()
-    except (NetmikoTimeoutException):  # 登录信息中IP地址不可达
-        print(f'设备 {device_info["host"]} 管理地址或端口不可达！')
+    except NetmikoTimeoutException:  # 登录信息中IP地址不可达
+        print(f'设备 {login_info["host"]} 管理地址或端口不可达！')
         with LOCK:
             log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + device_info['host'] + ' 管理地址或端口不可达！\n')
+            log.write('设备 ' + login_info['host'] + ' 管理地址或端口不可达！\n')
             log.close()
-    except (AuthenticationException):  # 登录信息中用户名或密码错误
-        print(f'设备 {device_info["host"]} 登录认证失败！')
+    except AuthenticationException:  # 登录信息中用户名或密码错误
+        print(f'设备 {login_info["host"]} 登录认证失败！')
         with LOCK:
             log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + device_info['host'] + ' 登录认证失败！\n')
+            log.write('设备 ' + login_info['host'] + ' 登录认证失败！\n')
             log.close()
-    except (ValueError):  # 登录信息中的Enable密码错误
-        print(f'设备 {device_info["host"]} Enable密码错误！')
+    except ValueError:  # 登录信息中的Enable密码错误
+        print(f'设备 {login_info["host"]} Enable密码错误！')
         with LOCK:
             log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + device_info['host'] + ' Enable密码错误！\n')
+            log.write('设备 ' + login_info['host'] + ' Enable密码错误！\n')
             log.close()
-    except (TimeoutError):  # Telnet登录超时
-        print(f'设备 {device_info["host"]} Telnet连接超时！')
+    except TimeoutError:  # Telnet登录超时
+        print(f'设备 {login_info["host"]} Telnet连接超时！')
         with LOCK:
             log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + device_info['host'] + ' Telnet连接超时！\n')
+            log.write('设备 ' + login_info['host'] + ' Telnet连接超时！\n')
             log.close()
     else:  # 如果登录正常，开始巡检
-        log_file = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + device_info['host'] + '.log', 'w', encoding='utf-8')  # 创建当前设备的log文件
-        print('设备', device_info['host'], '正在巡检...')  # 打印当前线程正在巡检的设备名称
-        for cmd in cmds_dict[device_info['device_type']]:  # 从cmds_dict中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
+        device_log_file = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + login_info['host'] + '.log', 'w', encoding='utf-8')  # 创建当前设备的log文件
+        print('设备', login_info['host'], '正在巡检...')  # 打印当前线程正在巡检的设备名称
+        for cmd in cmds_dict[login_info['device_type']]:  # 从cmds_dict中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
             if type(cmd) == str:
-                log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至log文件
+                device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至log文件
                 show = ssh.send_command(cmd)  # 执行当前巡检命令，并获取结果
                 time.sleep(1)  # 等待1s
-                log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至log文件
-        log_file.close()  # 关闭创建的log文件
+                device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至log文件
+        device_log_file.close()  # 关闭创建的log文件
         ssh.disconnect()  # 关闭SSH连接
         t12 = time.time()  # 子线程执行计时结束点
-        print('设备', device_info['host'], '巡检完成，用时', round(t12 - t11, 1), '秒。')  # 打印子线程执行共用时长
+        print('设备', login_info['host'], '巡检完成，用时', round(t12 - t11, 1), '秒。')  # 打印子线程执行共用时长
         pool.release()  # 最大线程限制，释放一个线程
 
 
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     else:  # 如果有
         try:  # 尝试删除巡检故障设备报错的log文件
             os.remove(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log')  # 删除log文件
-        except (FileNotFoundError):  # 如果没有log文件
+        except FileNotFoundError:  # 如果没有log文件
             pass  # 跳过，不做处理
 
     for device_info in devices_info:  # 遍历所有设备登录信息
@@ -119,13 +119,13 @@ if __name__ == '__main__':
         i.join()  # 等待所有线程的结束
 
     try:  # 尝试打开巡检log文件
-        logfile = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'r', encoding='utf-8')  # 打开巡检log文件
-    except (FileNotFoundError):  # 如果找不到巡检log文件
-        logfilelines = 0  # 证明没有出现巡检登录异常情况
+        log_file = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'r', encoding='utf-8')  # 打开巡检log文件
+    except FileNotFoundError:  # 如果找不到巡检log文件
+        file_lines = 0  # 证明没有出现巡检登录异常情况
     else:  # 如果正常打开了巡检log文件
-        logfilelines = len(logfile.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
-        logfile.close()
+        file_lines = len(log_file.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
+        log_file.close()
 
     t2 = time.time()  # 程序执行计时结束点
     print('\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
-    print(f'巡检结束，共巡检 {len(thread_list)} 台设备， {logfilelines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
+    print(f'巡检结束，共巡检 {len(thread_list)} 台设备， {file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
