@@ -129,3 +129,4 @@ if __name__ == '__main__':
     t2 = time.time()  # 程序执行计时结束点
     print('\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
     print(f'巡检结束，共巡检 {len(thread_list)} 台设备， {file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
+
