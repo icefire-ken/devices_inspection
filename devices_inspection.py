@@ -45,45 +45,40 @@ def inspection(login_info, cmds_dict):
         ssh = ConnectHandler(**login_info)  # 使用当前设备登录信息，SSH登录设备
         ssh.enable()  # 进入设备Enable模式
     except AttributeError:  # 登录信息中缺失IP地址
-        print(f'设备 {login_info["host"]} 登录信息错误！')  # 打印提示该设备登录信息错误
         with LOCK:  # 线程锁
-            log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')  # 创建log文件
-            log.write('设备 ' + login_info['host'] + ' 登录信息错误！\n')  # 保存巡检报错的设备故障信息
-            log.close()
+            print(f'设备 {login_info["host"]} 登录信息错误！')  # 打印提示该设备登录错误信息
+            with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8') as log:
+                log.write('设备 ' + login_info['host'] + ' 登录信息错误！\n')  # 保存巡检报错的信息
     except NetmikoTimeoutException:  # 登录信息中IP地址不可达
-        print(f'设备 {login_info["host"]} 管理地址或端口不可达！')
         with LOCK:
-            log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + login_info['host'] + ' 管理地址或端口不可达！\n')
-            log.close()
+            print(f'设备 {login_info["host"]} 管理地址或端口不可达！')
+            with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8') as log:
+                log.write('设备 ' + login_info['host'] + ' 管理地址或端口不可达！\n')
     except AuthenticationException:  # 登录信息中用户名或密码错误
-        print(f'设备 {login_info["host"]} 登录认证失败！')
         with LOCK:
-            log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + login_info['host'] + ' 登录认证失败！\n')
-            log.close()
+            print(f'设备 {login_info["host"]} 登录认证失败！')
+            with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8') as log:
+                log.write('设备 ' + login_info['host'] + ' 登录认证失败！\n')
     except ValueError:  # 登录信息中的Enable密码错误
-        print(f'设备 {login_info["host"]} Enable密码错误！')
         with LOCK:
-            log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + login_info['host'] + ' Enable密码错误！\n')
-            log.close()
+            print(f'设备 {login_info["host"]} Enable密码错误！')
+            with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8') as log:
+                log.write('设备 ' + login_info['host'] + ' Enable密码错误！\n')
     except TimeoutError:  # Telnet登录超时
-        print(f'设备 {login_info["host"]} Telnet连接超时！')
         with LOCK:
-            log = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8')
-            log.write('设备 ' + login_info['host'] + ' Telnet连接超时！\n')
-            log.close()
+            print(f'设备 {login_info["host"]} Telnet连接超时！')
+            with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8') as log:
+                log.write('设备 ' + login_info['host'] + ' Telnet连接超时！\n')
     else:  # 如果登录正常，开始巡检
-        device_log_file = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + login_info['host'] + '.log', 'w', encoding='utf-8')  # 创建当前设备的log文件
-        print('设备', login_info['host'], '正在巡检...')  # 打印当前线程正在巡检的设备名称
-        for cmd in cmds_dict[login_info['device_type']]:  # 从cmds_dict中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
-            if type(cmd) == str:
-                device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至log文件
-                show = ssh.send_command(cmd)  # 执行当前巡检命令，并获取结果
-                time.sleep(1)  # 等待1s
-                device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至log文件
-        device_log_file.close()  # 关闭创建的log文件
+        with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + login_info['host'] + '.log', 'w', encoding='utf-8') as device_log_file:
+            # 创建当前设备的log文件
+            print('设备', login_info['host'], '正在巡检...')  # 打印当前线程正在巡检的设备名称
+            for cmd in cmds_dict[login_info['device_type']]:  # 从cmds_dict中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
+                if type(cmd) == str:  # 判断读取的名字是否正确
+                    device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至log文件
+                    show = ssh.send_command(cmd)  # 执行当前巡检命令，并获取结果
+                    time.sleep(1)  # 等待1s
+                    device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至log文件
         ssh.disconnect()  # 关闭SSH连接
         t12 = time.time()  # 子线程执行计时结束点
         print('设备', login_info['host'], '巡检完成，用时', round(t12 - t11, 1), '秒。')  # 打印子线程执行共用时长
@@ -92,7 +87,7 @@ def inspection(login_info, cmds_dict):
 
 if __name__ == '__main__':
     t1 = time.time()  # 程序执行计时起始点
-    thread_list = []  # 创建一个列表，准备存放所有线程
+    threading_list = []  # 创建一个列表，准备存放所有线程
     pool = threading.BoundedSemaphore(100)  # 最大巡检线程控制
     devices_info = get_devices_info(INFO_PATH)  # 读取所有设备信息
     cmds_info = get_cmds_info(INFO_PATH)  # 读取所有设备类型的巡检命令
@@ -111,22 +106,18 @@ if __name__ == '__main__':
     for device_info in devices_info:  # 遍历所有设备登录信息
         pre_device = threading.Thread(target=inspection, args=(device_info, cmds_info))
         # 创建一个线程，执行inspection函数，传入当前遍历的设备登录信息和巡检命令字典
-        thread_list.append(pre_device)  # 将当前创建的线程追加进列表
+        threading_list.append(pre_device)  # 将当前创建的线程追加进列表
         pool.acquire()  # 最大线程限制，获取一个线程
         pre_device.start()  # 开启这个线程
 
-    for i in thread_list:  # 遍历所有创建的线程
+    for i in threading_list:  # 遍历所有创建的线程
         i.join()  # 等待所有线程的结束
 
     try:  # 尝试打开巡检log文件
-        log_file = open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'r', encoding='utf-8')  # 打开巡检log文件
+        with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'r', encoding='utf-8') as log_file:
+            file_lines = len(log_file.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
     except FileNotFoundError:  # 如果找不到巡检log文件
         file_lines = 0  # 证明没有出现巡检登录异常情况
-    else:  # 如果正常打开了巡检log文件
-        file_lines = len(log_file.readlines())  # 读取巡检log文件共有多少行，有多少行，代表出现了多少个设备登录异常
-        log_file.close()
-
     t2 = time.time()  # 程序执行计时结束点
     print('\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
-    print(f'巡检结束，共巡检 {len(thread_list)} 台设备， {file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
-
+    print(f'巡检结束，共巡检 {len(threading_list)} 台设备， {file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告

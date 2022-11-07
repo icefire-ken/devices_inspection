@@ -18,6 +18,11 @@ python devices_inspection.py
 
 # 更新日志
 
+## 2022.11.05
+
+- 修复了CMD窗口内巡检过程实时显示，有可能发生的多个设备信息在同一行显示的问题。
+- 使用with open代替原有的open close。
+
 ## 2022.08.12
 
 - A10设备请注意，若Enable密码为空，则需要在info文件中的Secret列中填补空格，否则会报“登录信息错误”异常。
