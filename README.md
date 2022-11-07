@@ -21,7 +21,6 @@ python devices_inspection.py
 ## 2022.11.07
 
 - 修复了CMD窗口内巡检过程实时显示，有可能发生的多个设备信息在同一行显示的问题。
-- 使用with open代替原有的open close。
 
 ## 2022.08.12
 
