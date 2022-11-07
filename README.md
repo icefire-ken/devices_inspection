@@ -10,7 +10,14 @@
 
 # 使用方法
 
-准备info.xlsx文件，与脚本存放于同一目录，文件里存有需要巡检的设备登录信息及巡检命令。
+脚本移植请利用requirements.txt文件，使用下面的命令安装所需的第三方库。
+
+```python
+pip install -r requirements.txt
+```
+
+准备info.xlsx文件，与.py脚本存放于同一目录，文件里应存有需要巡检的设备登录信息和巡检命令。
+使用下面的领命开始巡检。
 
 ```python
 python devices_inspection.py
