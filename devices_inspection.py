@@ -6,7 +6,10 @@ import time
 import pandas
 import threading
 from netmiko import ConnectHandler
-from netmiko.ssh_exception import AuthenticationException, NetmikoTimeoutException
+# from netmiko.ssh_exception import AuthenticationException, NetmikoTimeoutException
+from netmiko.exceptions import NetMikoTimeoutException
+from netmiko.exceptions import AuthenticationException
+# from netmiko.exceptions import SSHException
 
 INFO_PATH = 'info.xlsx'  # 给定信息文件
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
@@ -49,7 +52,7 @@ def inspection(login_info, cmds_dict):
             print(f'设备 {login_info["host"]} 登录信息错误！')  # 打印提示该设备登录错误信息
             with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8') as log:
                 log.write('设备 ' + login_info['host'] + ' 登录信息错误！\n')  # 保存巡检报错的信息
-    except NetmikoTimeoutException:  # 登录信息中IP地址不可达
+    except NetMikoTimeoutException:  # 登录信息中IP地址不可达
         with LOCK:
             print(f'设备 {login_info["host"]} 管理地址或端口不可达！')
             with open(os.getcwd() + '\\' + LOCAL_TIME + '\\' + '01log.log', 'a', encoding='utf-8') as log:
