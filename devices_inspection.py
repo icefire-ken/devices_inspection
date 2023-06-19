@@ -79,8 +79,8 @@ def inspection(login_info, cmds_dict):
             for cmd in cmds_dict[login_info['device_type']]:  # 从cmds_dict中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
                 if type(cmd) == str:  # 判断读取的名字是否正确
                     device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至log文件
-                    show = ssh.send_command(cmd)  # 执行当前巡检命令，并获取结果
-                    time.sleep(1)  # 等待1s
+                    show = ssh.send_command(cmd, read_timeout=30)  # 执行当前巡检命令，并获取结果，最长等待30s
+                    # time.sleep(1)  # 等待1s
                     device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至log文件
         ssh.disconnect()  # 关闭SSH连接
         t12 = time.time()  # 子线程执行计时结束点
