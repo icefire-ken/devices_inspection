@@ -10,29 +10,36 @@
 
 # 使用方法
 
-脚本移植请利用requirements.txt文件，使用下面的命令安装所需的第三方库。
+- 脚本移植请利用requirements.txt文件，使用下面的命令安装所需的第三方库。
 
 ```python
 pip install -r requirements.txt
 ```
 
-准备info.xlsx文件，与.py脚本存放于同一目录，文件里应存有需要巡检的设备登录信息和巡检命令。
+- 准备info.xlsx文件，与.py脚本存放于同一目录，文件里应存有需要巡检的设备登录信息和巡检命令。
+
 info文件内sheet1存放网络环境中被巡检的设备登录信息，如下：
 ![20-38-18](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/e5e78532-52ee-4e76-bcd6-14b5031294c5)
+
 info文件内sheet2存放网络设备巡检输入的命令，如下：
 ![20-39-41](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/7eba04d7-38ff-4baa-9650-5e4c6d0aea72)
 
-使用下面的命令开始巡检。
+- 使用下面的命令运行脚本，开始巡检。
 
 ```python
 python devices_inspection.py
 ```
+
+- 也可以使用.exe可执行程序，开始巡检。
+![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
 
 # 更新日志
 
 ## 2023.12.25
 
 - 为了方便在没有Python环境的PC上使用，以将.py脚本打包成了.exe程序；有此需求的朋友可以直接下载EXE文件，配合info文件使用。
+![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/0cfa7f62-8c05-4a07-aa26-05af4edbf45c)
+
 
 ## 2023.06.19
 
