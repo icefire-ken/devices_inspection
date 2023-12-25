@@ -40,9 +40,6 @@ python devices_inspection.py
 
 - 为了方便在没有Python环境的PC上使用，以将.py脚本打包成了.exe程序；有此需求的朋友可以直接下载EXE文件，配合info文件使用。
 
-![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/0cfa7f62-8c05-4a07-aa26-05af4edbf45c)
-
-
 ## 2023.06.19
 
 - 修复了巡检命令输入等待结果时间过长的问题，大幅缩短巡检时间。
