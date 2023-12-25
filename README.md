@@ -17,6 +17,8 @@ pip install -r requirements.txt
 ```
 
 准备info.xlsx文件，与.py脚本存放于同一目录，文件里应存有需要巡检的设备登录信息和巡检命令。
+![20-38-18](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/e5e78532-52ee-4e76-bcd6-14b5031294c5)
+
 使用下面的命令开始巡检。
 
 ```python
