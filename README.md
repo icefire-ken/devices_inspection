@@ -31,6 +31,7 @@ python devices_inspection.py
 ```
 
 - 也可以使用.exe可执行程序，开始巡检。
+
 ![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
 
 # 更新日志
@@ -38,6 +39,7 @@ python devices_inspection.py
 ## 2023.12.25
 
 - 为了方便在没有Python环境的PC上使用，以将.py脚本打包成了.exe程序；有此需求的朋友可以直接下载EXE文件，配合info文件使用。
+
 ![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/0cfa7f62-8c05-4a07-aa26-05af4edbf45c)
 
 
