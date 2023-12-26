@@ -38,7 +38,8 @@ python devices_inspection.py
 
 ## 2023.12.25
 
-- 为了方便在没有Python环境的PC上使用，以将.py脚本打包成了.exe程序；有此需求的朋友可以直接下载EXE文件，配合info文件使用。
+- 为了方便在没有Python环境的PC上使用，以将.py脚本打包成了.exe程序。
+- EXE程序Release，想要直接使用的朋友可以在Releases下载EXE程序，配合info文件使用。
 
 ## 2023.06.19
 
