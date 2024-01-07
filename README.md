@@ -35,7 +35,11 @@ python devices_inspection.py
 - 也可以使用.exe可执行程序，开始巡检。
 
 ![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
-<img src="![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)" alt="Image" width="400">
+
+## 关于info文件中的Secret密码！
+
+- 如果人工登录设备没有要求输入Enable Password，info文件中的Secret字段为空（无需填写）。
+- A10设备默认是没有Enable Password的，但进入Enable模式时，仍然会提示要求输入Enable Password，人工操作时可以直接Enter进入；使用脚本时需要在info文件的Secret字段中填入空格即可。
 
 # 更新日志
 
