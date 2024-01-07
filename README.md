@@ -35,6 +35,7 @@ python devices_inspection.py
 - 也可以使用.exe可执行程序，开始巡检。
 
 ![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
+<img src="![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)" alt="Image" width="400">
 
 # 更新日志
 
