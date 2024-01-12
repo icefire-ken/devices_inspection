@@ -8,6 +8,8 @@
 
 - 使用脚本能够在脚本所在目录下生成当前日期的巡检信息存放目录，其中每个设备的巡检信息文件以主机名称命名。
 
+- .py脚本已经封装为.exe程序，配合info文件，可以方便的在没有Python环境的PC上使用。（可在Releases中下载）
+
 # 使用方法
 
 - 脚本移植请利用requirements.txt文件，使用下面的命令安装所需的第三方库。
@@ -19,9 +21,11 @@ pip install -r requirements.txt
 - 准备info.xlsx文件，与.py脚本存放于同一目录，文件里应存有需要巡检的设备登录信息和巡检命令。
 
 info文件内sheet1存放网络环境中被巡检的设备登录信息，如下：
+
 ![20-38-18](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/e5e78532-52ee-4e76-bcd6-14b5031294c5)
 
 info文件内sheet2存放网络设备巡检输入的命令，如下：
+
 ![20-39-41](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/7eba04d7-38ff-4baa-9650-5e4c6d0aea72)
 
 - 使用下面的命令运行脚本，开始巡检。
@@ -34,7 +38,16 @@ python devices_inspection.py
 
 ![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
 
+## 关于info文件中的Secret密码！
+
+- 如果人工登录设备没有要求输入Enable Password，info文件中的Secret字段为空（无需填写）。
+- A10设备默认是没有Enable Password的，但进入Enable模式时，仍然会提示要求输入Enable Password，人工操作时可以直接Enter进入；使用脚本时需要在info文件的Secret字段中填入空格即可。
+
 # 更新日志
+
+## 2023.12.28
+
+- info文件添加了部分锐捷类型设备的巡检命令。
 
 ## 2023.12.25
 
