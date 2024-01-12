@@ -11,7 +11,7 @@ from netmiko.exceptions import NetMikoTimeoutException
 from netmiko.exceptions import AuthenticationException
 # from netmiko.exceptions import SSHException
 
-INFO_PATH = 'info.xlsx'  # 给定信息文件
+INFO_PATH = os.path.dirname(__file__) + '\\info.xlsx'  # 给定信息文件
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
 
