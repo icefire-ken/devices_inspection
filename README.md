@@ -16,11 +16,11 @@
 
 - 准备info.xlsx文件，与.exe程序或.py脚本存放于同一目录，文件里应存有需要巡检设备的登录信息和巡检命令。
 
-  info文件内sheet1存放被巡检网络设备的登录信息，如下：
+info文件内sheet1存放被巡检网络设备的登录信息，如下：
 
 ![OvzZfp.png](https://ooo.0x0.ooo/2024/01/19/OvzZfp.png)
 
-  info文件内sheet2存放用于网络设备巡检输入的命令，如下：
+info文件内sheet2存放用于网络设备巡检输入的命令，如下：
 
 ![OvzyBU.png](https://ooo.0x0.ooo/2024/01/19/OvzyBU.png)
 
