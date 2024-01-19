@@ -34,7 +34,7 @@ python devices_inspection.py
 
 - 也可以使用.exe可执行程序，开始巡检。
 
-![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
+![](https://pic.imgdb.cn/item/65aa1881871b83018ad18622.png)
 
 
 ## 关于info文件中的Secret密码！
