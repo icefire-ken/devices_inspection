@@ -22,6 +22,8 @@ pip install -r requirements.txt
 
 info文件内sheet1存放网络环境中被巡检的设备登录信息，如下：
 
+![](https://pic.imgdb.cn/item/65aa1b54871b83018adbebea.png)
+
 info文件内sheet2存放网络设备巡检输入的命令，如下：
 
 ![](https://pic.imgdb.cn/item/65aa1882871b83018ad188b6.png)
