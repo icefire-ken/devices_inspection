@@ -42,6 +42,8 @@ python devices_inspection.py
 
 ![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
 
+<img src="https://pic.imgdb.cn/item/65aa1881871b83018ad18622.png">
+
 ## 关于info文件中的Secret密码！
 
 - 如果人工登录设备没有要求输入Enable Password，info文件中的Secret字段为空（无需填写）。
