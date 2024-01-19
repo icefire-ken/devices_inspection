@@ -132,5 +132,4 @@ if __name__ == '__main__':
     t2 = time.time()  # 程序执行计时结束点
     print(f'\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
     print(f'巡检结束，共巡检 {len(threading_list)} 台设备， {file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
-    time.sleep(3)  # 等待3秒退出程序，方便使用者查看CMD中的输出信息
-
+    time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
