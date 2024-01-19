@@ -24,13 +24,12 @@ info文件内sheet1存放网络环境中被巡检的设备登录信息，如下�
 
 ![20-38-18](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/e5e78532-52ee-4e76-bcd6-14b5031294c5)
 
-<img src="https://pic.imgdb.cn/item/65aa1882871b83018ad189ac.png">
+![](https://pic.imgdb.cn/item/65aa1882871b83018ad189ac.png)
 
 info文件内sheet2存放网络设备巡检输入的命令，如下：
 
 ![20-39-41](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/7eba04d7-38ff-4baa-9650-5e4c6d0aea72)
 
-<img src="https://pic.imgdb.cn/item/65aa1882871b83018ad188b6.png">
 
 - 使用下面的命令运行脚本，开始巡检。
 
@@ -42,7 +41,6 @@ python devices_inspection.py
 
 ![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
 
-<img src="https://pic.imgdb.cn/item/65aa1881871b83018ad18622.png">
 
 ## 关于info文件中的Secret密码！
 
