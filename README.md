@@ -26,7 +26,7 @@ info文件内sheet1存放网络环境中被巡检的设备登录信息，如下�
 
 info文件内sheet2存放网络设备巡检输入的命令，如下：
 
-![](https://pic.imgdb.cn/item/65aa1882871b83018ad188b6.png)
+![OvzyBU.png](https://ooo.0x0.ooo/2024/01/19/OvzyBU.png)
 
 - 使用下面的命令运行脚本，开始巡检。
 
@@ -36,7 +36,7 @@ python devices_inspection.py
 
 - 也可以使用.exe可执行程序，开始巡检。
 
-![](https://pic.imgdb.cn/item/65aa1881871b83018ad18622.png)
+![OvzKpj.png](https://ooo.0x0.ooo/2024/01/19/OvzKpj.png)
 
 
 ## 关于info文件中的Secret密码！
