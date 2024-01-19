@@ -1,4 +1,4 @@
-﻿# 简介
+# 简介
 
 - 工作中经常需要对客户的网络设备进行巡检，之前都是用SecureCRT开启记录Log Session，依次远程登录到每个设备上，依次输入巡检命令收集设备巡检信息；
 
@@ -12,32 +12,37 @@
 
 # 使用方法
 
-- 脚本移植请利用requirements.txt文件，使用下面的命令安装所需的第三方库。
+## P1、执行准备
+
+- 准备info.xlsx文件，与.exe程序或.py脚本存放于同一目录，文件里应存有需要巡检设备的登录信息和巡检命令。
+
+info文件内sheet1存放被巡检网络设备的登录信息，如下：
+
+![OvzZfp.png](https://ooo.0x0.ooo/2024/01/19/OvzZfp.png)
+
+info文件内sheet2存放用于网络设备巡检输入的命令，如下：
+
+![OvzyBU.png](https://ooo.0x0.ooo/2024/01/19/OvzyBU.png)
+
+## P2、exe程序执行（P2与P3任选其一）
+
+- 运行.exe可执行程序，开始巡检。
+
+![OvzKpj.png](https://ooo.0x0.ooo/2024/01/19/OvzKpj.png)
+
+## P3、py脚本执行（P2与P3任选其一）
+
+- 脚本执行需要先安装依赖的第三方库，利用requirements.txt文件，使用下面的命令安装依赖的第三方库。
 
 ```python
 pip install -r requirements.txt
 ```
 
-- 准备info.xlsx文件，与.py脚本存放于同一目录，文件里应存有需要巡检的设备登录信息和巡检命令。
-
-info文件内sheet1存放网络环境中被巡检的设备登录信息，如下：
-
-![OvzZfp.png](https://ooo.0x0.ooo/2024/01/19/OvzZfp.png)
-
-info文件内sheet2存放网络设备巡检输入的命令，如下：
-
-![OvzyBU.png](https://ooo.0x0.ooo/2024/01/19/OvzyBU.png)
-
-- 使用下面的命令运行脚本，开始巡检。
+- 在脚本文件目录下，使用下面的命令运行脚本，开始巡检。
 
 ```python
 python devices_inspection.py
 ```
-
-- 也可以使用.exe可执行程序，开始巡检。
-
-![OvzKpj.png](https://ooo.0x0.ooo/2024/01/19/OvzKpj.png)
-
 
 ## 关于info文件中的Secret密码！
 
