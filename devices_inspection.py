@@ -18,9 +18,9 @@ LOCK = threading.Lock()  # 线程锁实例化
 def get_devices_info(info_file):  # 获取info文件中的设备登录信息
     try:
         devices_dataframe = pandas.read_excel(info_file, sheet_name=0, dtype=str)  # 读取Excel文件第一张工作表的数据生成DataFrame
-    except FileNotFoundError as get_devices_error:  # 如果没有配置info文件或info文件名称错误
-        print(f'没有找到info文件！')
-        sys.exit(1)
+    except FileNotFoundError as get_devices_error:  # 如果没有配置info文件或info文件名错误
+        print(f'没有找到info文件！')  # 代表没有找到info文件或info文件名错误
+        sys.exit(1)  # 异常退出脚本
     else:
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
         # "records"参数规定外层为列表，内层以列标题为key，以此列的行内容为value的字典
@@ -31,14 +31,14 @@ def get_devices_info(info_file):  # 获取info文件中的设备登录信息
 def get_cmds_info(info_file):  # 获取info文件中的巡检命令
     try:
         cmds_dataframe = pandas.read_excel(info_file, sheet_name=1, dtype=str)  # 读取Excel文件第二张工作表的数据生成DataFrame
-    except Exception as get_cmds_error:
-        match type(get_cmds_error).__name__:
-            case 'FileNotFoundError':
-                print(f'没有找到info文件！')
-                sys.exit(1)
-            case 'ValueError':
-                print(f'info文件缺失子表格信息！')
-                sys.exit(1)
+    except Exception as get_cmds_error:  # 捕获异常信息
+        match type(get_cmds_error).__name__:  # 匹配异常类型的名称
+            case 'FileNotFoundError':  # 异常类型名称：FileNotFoundError
+                print(f'没有找到info文件！')  # 代表没有找到info文件或info文件名错误
+                sys.exit(1)  # 异常退出脚本
+            case 'ValueError':  # 异常类型名称：ValueError
+                print(f'info文件缺失子表格信息！')  # 代表info文件缺失子表格信息
+                sys.exit(1)  # 异常退出脚本
     else:
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
         # "list"参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
