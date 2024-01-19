@@ -23,6 +23,7 @@ pip install -r requirements.txt
 info文件内sheet1存放网络环境中被巡检的设备登录信息，如下：
 
 ![20-38-18](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/e5e78532-52ee-4e76-bcd6-14b5031294c5)
+
 <img src="https://pic.imgdb.cn/item/65aa1882871b83018ad189ac.png">
 
 info文件内sheet2存放网络设备巡检输入的命令，如下：
