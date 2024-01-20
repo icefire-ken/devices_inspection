@@ -10,7 +10,7 @@ from netmiko import ConnectHandler
 from netmiko.exceptions import NetMikoTimeoutException
 from netmiko.exceptions import AuthenticationException
 
-INFO_PATH = os.path.join(os.path.dirname(__file__), 'info.xlsx')  # 给定info文件
+INFO_PATH = os.path.join(os.getcwd(), 'info.xlsx')  # 给定info文件
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
 
@@ -20,7 +20,9 @@ def get_devices_info(info_file):  # 获取info文件中的设备登录信息
         devices_dataframe = pandas.read_excel(info_file, sheet_name=0, dtype=str)  # 读取Excel文件第一张工作表的数据生成DataFrame
     except FileNotFoundError as get_devices_error:  # 如果没有配置info文件或info文件名错误
         print(f'没有找到info文件！')  # 代表没有找到info文件或info文件名错误
-        sys.exit(1)  # 异常退出脚本
+        print(f'\n程序即将结束！')
+        time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+        sys.exit(1)  # 异常退出
     else:
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
         # "records"参数规定外层为列表，内层以列标题为key，以此列的行内容为value的字典
@@ -35,10 +37,14 @@ def get_cmds_info(info_file):  # 获取info文件中的巡检命令
         match type(get_cmds_error).__name__:  # 匹配异常类型的名称
             case 'FileNotFoundError':  # 异常类型名称：FileNotFoundError
                 print(f'没有找到info文件！')  # 代表没有找到info文件或info文件名错误
-                sys.exit(1)  # 异常退出脚本
+                print(f'\n程序即将结束！')
+                time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+                sys.exit(1)  # 异常退出
             case 'ValueError':  # 异常类型名称：ValueError
                 print(f'info文件缺失子表格信息！')  # 代表info文件缺失子表格信息
-                sys.exit(1)  # 异常退出脚本
+                print(f'\n程序即将结束！')
+                time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+                sys.exit(1)  # 异常退出
     else:
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
         # "list"参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
@@ -131,5 +137,6 @@ if __name__ == '__main__':
         file_lines = 0  # 证明本次巡检没有出现巡检异常情况
     t2 = time.time()  # 程序执行计时结束点
     print(f'\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
-    print(f'巡检结束，共巡检 {len(threading_list)} 台设备， {file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
+    print(f'巡检完成，共巡检 {len(threading_list)} 台设备，{file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
+    print(f'\n程序即将结束！')
     time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
