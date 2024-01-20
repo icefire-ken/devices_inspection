@@ -1,42 +1,49 @@
-﻿# 简介
+# 简介
 
-- 工作中经常需要对客户的网络设备进行巡检，之前都是用SecureCRT开启记录Log Session，依次远程登录到每个设备上，依次输入巡检命令收集设备巡检信息；
+- 作为网络工程师工作中经常遇到需要对网络设备进行巡检的情况，此前都是用SecureCRT软件开启记录Log Session，依次登录每台设备，依次输入命令收集巡检信息。
+  
+- 现在利用Python实现自动登录网络设备，自动输入命令收集巡检信息；并且使用多线程技术，缩减巡检时间。
+  
+- 在登录出现故障时，能够记录Log提醒工程师，待排查故障后可再次进行巡检。
 
-- 现在希望利用Python能够实现自动登录设备，自动抓取巡检信息，并且使用多线程技术，缩减巡检时间；
+- 执行巡检能够在.py脚本所在目录下生成当前日期的巡检信息存放目录，其中每台设备的巡检信息文件以设备名称命名。
 
-- 在登录出现故障时，能够记录Log提醒工程师稍后手动排查故障再进行巡检。
-
-- 使用脚本能够在脚本所在目录下生成当前日期的巡检信息存放目录，其中每个设备的巡检信息文件以主机名称命名。
-
-- .py脚本已经封装为.exe程序，配合info文件，可以方便的在没有Python环境的PC上使用。（可在Releases中下载）
+- .py脚本已经封装为.exe程序，配合info文件可以方便的在没有Python环境的PC上使用。（可在Releases中下载）
 
 # 使用方法
 
-- 脚本移植请利用requirements.txt文件，使用下面的命令安装所需的第三方库。
+## P1、执行准备
+
+- 准备info.xlsx文件，与.exe程序或.py脚本存放于同一目录，文件里应存有需要巡检设备的登录信息和巡检命令。
+
+info文件内sheet1存放被巡检网络设备的登录信息，如下：
+
+![OvzZfp.png](https://ooo.0x0.ooo/2024/01/19/OvzZfp.png)
+
+info文件内sheet2存放用于网络设备巡检输入的命令，如下：
+
+![OvzyBU.png](https://ooo.0x0.ooo/2024/01/19/OvzyBU.png)
+
+## P2、exe程序执行（P2与P3任选其一）
+
+- 在Releases中下载.exe程序。
+- 运行.exe程序，开始巡检。
+
+![OvzKpj.png](https://ooo.0x0.ooo/2024/01/19/OvzKpj.png)
+
+## P3、py脚本执行（P2与P3任选其一）
+
+- 脚本执行需要先安装依赖的第三方库，利用requirements.txt文件，使用下面的命令安装依赖的第三方库。
 
 ```python
 pip install -r requirements.txt
 ```
 
-- 准备info.xlsx文件，与.py脚本存放于同一目录，文件里应存有需要巡检的设备登录信息和巡检命令。
-
-info文件内sheet1存放网络环境中被巡检的设备登录信息，如下：
-
-![20-38-18](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/e5e78532-52ee-4e76-bcd6-14b5031294c5)
-
-info文件内sheet2存放网络设备巡检输入的命令，如下：
-
-![20-39-41](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/7eba04d7-38ff-4baa-9650-5e4c6d0aea72)
-
-- 使用下面的命令运行脚本，开始巡检。
+- 在脚本文件目录下，使用下面的命令运行脚本，开始巡检。
 
 ```python
 python devices_inspection.py
 ```
-
-- 也可以使用.exe可执行程序，开始巡检。
-
-![20-48-52](https://github.com/icefire-ken/Devices_Inspection/assets/26742041/99edaca6-27b3-4ebd-88ed-7799b04a5a3d)
 
 ## 关于info文件中的Secret密码！
 
@@ -44,6 +51,25 @@ python devices_inspection.py
 - A10设备默认是没有Enable Password的，但进入Enable模式时，仍然会提示要求输入Enable Password，人工操作时可以直接Enter进入；使用脚本时需要在info文件的Secret字段中填入空格即可。
 
 # 更新日志
+
+## 待更新
+
+- 增加了对未知异常的处理。
+
+## 2024.01.19
+
+- 使用了更多的格式化字符串，使得输出信息更清晰，脚本可读性更高。
+- 在info文件设备登录信息表项中添加了port字段，为某些修改了SSH和Telnet默认端口的场景提供使用。
+- 增加了程序延迟结束，在使用.exe程序时为工程师留有充足的时间查看CMD中的输出信息。
+- 修改了操作文件的路径获取方式。
+- 修改了对巡检命令是否为字符串的判断。
+- 修改了一些不够准确的注释。
+- 修复了释放线程的结构，避免了异常退出时，可能无法释放线程的错误。
+- 修复了读取info文件异常时，脚本仍然继续执行的错误。
+
+## 2024.01.12
+
+- 修改了获取info文件路径的方式。
 
 ## 2023.12.28
 
