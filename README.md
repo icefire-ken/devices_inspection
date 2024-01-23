@@ -55,6 +55,7 @@ python devices_inspection.py
 ## 待更新
 
 - 增加了对未知异常的处理；记录脚本执行遇到的未知异常，00Unknown文件，方便反馈给开发者。
+- 对加密Excel文件的支持。
 
 ## 2024.01.21
 
