@@ -7,21 +7,24 @@ import time
 import pandas
 import threading
 from netmiko import ConnectHandler
-from netmiko.exceptions import NetMikoTimeoutException
-from netmiko.exceptions import AuthenticationException
 
 INFO_PATH = os.path.join(os.getcwd(), 'info.xlsx')  # 给定info文件
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
+POOL = threading.BoundedSemaphore(100)  # 最大线程控制，当前100个线程可以同时运行
 
 
 def get_devices_info(info_file):  # 获取info文件中的设备登录信息
     try:
         devices_dataframe = pandas.read_excel(info_file, sheet_name=0, dtype=str)  # 读取Excel文件第一张工作表的数据生成DataFrame
-    except FileNotFoundError as get_devices_error:  # 如果没有配置info文件或info文件名错误
-        print(f'没有找到info文件！')  # 代表没有找到info文件或info文件名错误
-        print(f'\n程序即将结束！')
-        time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+    except FileNotFoundError:  # 如果没有配置info文件或info文件名错误
+        print(f'\n没有找到info文件！\n')  # 代表没有找到info文件或info文件名错误
+        for i2 in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+            if i2 > 0:
+                print(f'\r程序将在 {i2} 秒后退出...', end='')
+                time.sleep(1)
+            else:
+                print(f'\r程序已退出！', end='')
         sys.exit(1)  # 异常退出
     else:
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
@@ -33,18 +36,15 @@ def get_devices_info(info_file):  # 获取info文件中的设备登录信息
 def get_cmds_info(info_file):  # 获取info文件中的巡检命令
     try:
         cmds_dataframe = pandas.read_excel(info_file, sheet_name=1, dtype=str)  # 读取Excel文件第二张工作表的数据生成DataFrame
-    except Exception as get_cmds_error:  # 捕获异常信息
-        match type(get_cmds_error).__name__:  # 匹配异常类型的名称
-            case 'FileNotFoundError':  # 异常类型名称：FileNotFoundError
-                print(f'没有找到info文件！')  # 代表没有找到info文件或info文件名错误
-                print(f'\n程序即将结束！')
-                time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-                sys.exit(1)  # 异常退出
-            case 'ValueError':  # 异常类型名称：ValueError
-                print(f'info文件缺失子表格信息！')  # 代表info文件缺失子表格信息
-                print(f'\n程序即将结束！')
-                time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-                sys.exit(1)  # 异常退出
+    except ValueError:  # 捕获异常信息
+        print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
+        for i2 in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+            if i2 > 0:
+                print(f'\r程序将在 {i2} 秒后退出...', end='')
+                time.sleep(1)
+            else:
+                print(f'\r程序已退出！', end='')
+        sys.exit(1)  # 异常退出
     else:
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
         # "list"参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
@@ -60,31 +60,37 @@ def inspection(login_info, cmds_dict):
     try:  # 尝试登录设备
         ssh = ConnectHandler(**login_info)  # 使用设备登录信息，SSH登录设备
         ssh.enable()  # 进入设备Enable模式
-    except AttributeError:  # 登录信息中缺失IP地址
+    except Exception as ssh_error:  # 登录设备出现异常
         with LOCK:  # 线程锁
-            print(f'设备 {login_info["host"]} 登录信息错误！')  # 打印提示该设备登录错误信息
-            with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
-                log.write('设备 ' + login_info['host'] + ' 登录信息错误！\n')  # 保存巡检报错的信息
-    except NetMikoTimeoutException:  # 登录信息中IP地址不可达
-        with LOCK:
-            print(f'设备 {login_info["host"]} 管理地址或端口不可达！')
-            with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
-                log.write('设备 ' + login_info['host'] + ' 管理地址或端口不可达！\n')
-    except AuthenticationException:  # 登录信息中用户名或密码错误
-        with LOCK:
-            print(f'设备 {login_info["host"]} 登录认证失败！')
-            with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
-                log.write('设备 ' + login_info['host'] + ' 登录认证失败！\n')
-    except ValueError:  # 登录信息中的Enable密码错误
-        with LOCK:
-            print(f'设备 {login_info["host"]} Enable密码错误！')
-            with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
-                log.write('设备 ' + login_info['host'] + ' Enable密码错误！\n')
-    except TimeoutError:  # Telnet登录超时
-        with LOCK:
-            print(f'设备 {login_info["host"]} Telnet连接超时！')
-            with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
-                log.write('设备 ' + login_info['host'] + ' Telnet连接超时！\n')
+            match type(ssh_error).__name__:  # 匹配异常名称
+                case 'AttributeError':  # 异常名称为：AttributeError
+                    print(f'设备 {login_info["host"]} 缺少设备管理地址！')  # CMD输出提示信息
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} 缺少设备管理地址！\n')  # 记录到log文件
+                case 'NetmikoTimeoutException':
+                    print(f'设备 {login_info["host"]} 管理地址或端口不可达！')
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} 管理地址或端口不可达！\n')
+                case 'NetmikoAuthenticationException':
+                    print(f'设备 {login_info["host"]} 用户名或密码认证失败！')
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} 用户名或密码认证失败！\n')
+                case 'ValueError':
+                    print(f'设备 {login_info["host"]} Enable密码认证失败！')
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} Enable密码认证失败！\n')
+                case 'TimeoutError':
+                    print(f'设备 {login_info["host"]} Telnet连接超时！')
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} Telnet连接超时！\n')
+                case 'ReadTimeout':
+                    print(f'设备 {login_info["host"]} Enable密码认证失败！')
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} Enable密码认证失败！\n')
+                case _:
+                    print(f'设备 {login_info["host"]} 未知错误！')
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} 未知错误！{type(ssh_error).__name__}\n')
     else:  # 如果登录正常，开始巡检
         with open(os.path.join(os.getcwd(), LOCAL_TIME, login_info['host'] + '.log'), 'w', encoding='utf-8') as device_log_file:
             # 创建当前设备的巡检信息记录文件
@@ -97,15 +103,14 @@ def inspection(login_info, cmds_dict):
         t12 = time.time()  # 子线程执行计时结束点
         print(f'设备 {login_info["host"]} 巡检完成，用时 {round(t12 - t11, 1)} 秒。')  # 打印子线程执行时长
     finally:  # 最后结束SSH连接释放线程
-        if ssh is not None:  # 判断ssh对象有没有被正确赋值，没有正确赋值代表发生了异常
+        if ssh is not None:  # 判断ssh对象是否被正确赋值，赋值成功不为None，即SSH连接已建立，需要关闭连接
             ssh.disconnect()  # 关闭SSH连接
-        pool.release()  # 最大线程限制，释放一个线程
+        POOL.release()  # 最大线程限制，释放一个线程
 
 
 if __name__ == '__main__':
     t1 = time.time()  # 程序执行计时起始点
     threading_list = []  # 创建一个线程列表，准备存放所有线程
-    pool = threading.BoundedSemaphore(100)  # 最大线程控制，当前100个线程可以同时运行
     devices_info = get_devices_info(INFO_PATH)  # 读取所有设备的登录信息
     cmds_info = get_cmds_info(INFO_PATH)  # 读取所有设备类型的巡检命令
 
@@ -124,7 +129,7 @@ if __name__ == '__main__':
         pre_device = threading.Thread(target=inspection, args=(device_info, cmds_info))
         # 创建一个线程，执行inspection函数，传入当前遍历的设备登录信息和所有设备类型巡检命令
         threading_list.append(pre_device)  # 将当前创建的线程追加进线程列表
-        pool.acquire()  # 从最大线程限制，获取一个线程令牌
+        POOL.acquire()  # 从最大线程限制，获取一个线程令牌
         pre_device.start()  # 开启这个线程
 
     for i in threading_list:  # 遍历所有创建的线程
@@ -137,6 +142,10 @@ if __name__ == '__main__':
         file_lines = 0  # 证明本次巡检没有出现巡检异常情况
     t2 = time.time()  # 程序执行计时结束点
     print(f'\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
-    print(f'巡检完成，共巡检 {len(threading_list)} 台设备，{file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。')  # 打印巡检报告
-    print(f'\n程序即将结束！')
-    time.sleep(3)  # 等待3秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+    print(f'巡检完成，共巡检 {len(threading_list)} 台设备，{file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。\n')  # 打印巡检报告
+    for i1 in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+        if i1 > 0:
+            print(f'\r程序将在 {i1} 秒后退出...', end='')
+            time.sleep(1)
+        else:
+            print(f'\r程序已退出！', end='')
