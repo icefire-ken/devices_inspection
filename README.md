@@ -57,7 +57,7 @@ python devices_inspection.py
 - 增加了对未知异常的处理；记录脚本执行遇到的未知异常，00Unknown文件，方便反馈给开发者。
 - 对加密Excel文件的支持。
 - 修复了A10设备类型在默认配置下，没有设置Enable密码的时候需要在info文件的Secret字段中填入空格的问题。
-- - 不再需要空格填充Secret字段了。
+  - 不再需要空格填充Secret字段了。
 
 ## 2024.01.24
 
