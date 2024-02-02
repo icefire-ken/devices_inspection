@@ -48,7 +48,7 @@ python devices_inspection.py
 ## 关于info文件中的Secret密码！
 
 - 如果人工登录设备没有要求输入Enable Password，info文件中的Secret字段为空（无需填写）。
-- A10设备默认是没有Enable Password的，但进入Enable模式时，仍然会提示要求输入Enable Password，人工操作时可以直接Enter进入；使用脚本时需要在info文件的Secret字段中填入空格即可。
+- ~~A10设备默认是没有Enable Password的，但进入Enable模式时，仍然会提示要求输入Enable Password，人工操作时可以直接Enter进入；使用脚本时需要在info文件的Secret字段中填入空格即可。~~ 不再需要，2024.02.02更新解决。
 
 # 更新日志
 
@@ -56,7 +56,10 @@ python devices_inspection.py
 
 - 增加了对未知异常的处理；记录脚本执行遇到的未知异常，00Unknown文件，方便反馈给开发者。
 - 对加密Excel文件的支持。
-- 修复了A10设备类型在默认配置下，没有设置Enable密码的时候需要在info文件的Secret字段中填入空格的问题。
+
+## 2024.02.02
+
+- 修复了A10设备类型在没有配置Enable密码时，需要在info文件的Secret字段中填入空格才能正确登录的问题。
   - 不再需要空格填充Secret字段了。
 
 ## 2024.01.24
