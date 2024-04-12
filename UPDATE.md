@@ -7,7 +7,7 @@
 
 ## 2024.04.12
 
-- 更新项目描述文件（README.md、UPDATE.md、images文件夹）结构。
+- 更新项目描述文件结构。（README.md、UPDATE.md、images文件夹）
 
 ## 2024.02.02
 

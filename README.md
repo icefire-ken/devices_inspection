@@ -54,3 +54,5 @@ python devices_inspection.py
 # 更新日志
 
 详见[UPDATE.md](https://github.com/icefire-ken/devices_inspection/blob/main/UPDATE.md)。
+
+![sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
