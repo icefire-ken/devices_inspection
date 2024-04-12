@@ -18,18 +18,18 @@
 
 info文件内sheet1存放被巡检网络设备的登录信息，如下：
 
-![OvzZfp.png](https://ooo.0x0.ooo/2024/01/19/OvzZfp.png)
+![sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
 
 info文件内sheet2存放用于网络设备巡检输入的命令，如下：
 
-![OvzyBU.png](https://ooo.0x0.ooo/2024/01/19/OvzyBU.png)
+![sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png)
 
 ## P2、exe程序执行（P2与P3任选其一）
 
 - 在Releases中下载.exe程序。
 - 运行.exe程序，开始巡检。
 
-![OvzKpj.png](https://ooo.0x0.ooo/2024/01/19/OvzKpj.png)
+![exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png)
 
 ## P3、py脚本执行（P2与P3任选其一）
 
@@ -54,5 +54,3 @@ python devices_inspection.py
 # 更新日志
 
 详见[UPDATE.md](https://github.com/icefire-ken/devices_inspection/blob/main/UPDATE.md)。
-
-![sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
