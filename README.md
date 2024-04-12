@@ -18,18 +18,18 @@
 
 info文件内sheet1存放被巡检网络设备的登录信息，如下：
 
-![sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
+[sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
 
 info文件内sheet2存放用于网络设备巡检输入的命令，如下：
 
-![sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png)
+[sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png)
 
 ## P2、exe程序执行（P2与P3任选其一）
 
 - 在Releases中下载.exe程序。
 - 运行.exe程序，开始巡检。
 
-![exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png)
+[exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png)
 
 ## P3、py脚本执行（P2与P3任选其一）
 
@@ -45,11 +45,31 @@ pip install -r requirements.txt
 python devices_inspection.py
 ```
 
-## 关于info文件中的Secret密码！
+# 关于info文件中的Secret密码！
 
 - 如果人工登录设备没有要求输入Enable Password，info文件中的Secret字段为空（无需填写）。
 - ~~A10设备默认是没有Enable Password的，但进入Enable模式时，仍然会提示要求输入Enable Password，人工操作时可以直接Enter进入；使用脚本时需要在info文件的Secret字段中填入空格即可。~~
   - 不再需要，2024.02.02更新解决。
+
+# 为info文件添加需要的设备类型
+
+## P1、首先确认Netmiko支持的设备类型
+
+- 访问[Netmiko PLATFORMS](https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md)，查看支持的设备类型。
+
+## P2、添加设备类型进info文件
+
+- 在info文件内sheet1的Device Type列，添加需要的设备类型，并填写正确的登录信息。
+[add_device_type.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_device_type.png)
+- 在info文件内sheet2添加该设备类型对应的巡检命令。
+[add_command.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_command.png)
+
+# 关于使用Telnet方式登录设备
+
+- Netmiko使用deivce_type后缀的方式来识别使用Telnet方式登录的设备，比如：cisco_ios_telnet，有此后缀的设备Netmiko会自动使用Telnet方式登录。
+- 但Netmiko目前支持Telnet方式登录的设备类型有限，具体可参考[Netmiko PLATFORMS](https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md)官方说明。
+- 使用Telnet方式登录设备时，需要将info文件内sheet1的deivce_type列中，需要使用Telnet方式登录的设备添加后缀，如：cisco_ios_telnet。（方法与**为info文件添加需要的设备类型**相同）
+- 相应的，sheet2中也需要使用带有Telnet后缀的device_type，如：cisco_ios_telnet，来标识来用巡检此类型设备的巡检命令。（方法与**为info文件添加需要的设备类型**相同）
 
 # 更新日志
 
