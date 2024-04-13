@@ -68,7 +68,7 @@ python devices_inspection.py
 
 - Netmiko使用deivce_type后缀的方式来识别使用Telnet方式登录的设备，比如：cisco_ios_telnet，有此后缀的设备Netmiko会自动使用Telnet方式登录。
 - 但Netmiko目前支持Telnet方式登录的设备类型有限，具体可参考[Netmiko PLATFORMS](https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md)官方说明。
-- 使用Telnet方式巡检时，在info文件内sheet1的deivce_type列中，添加Telnet后缀标识，如：cisco_ios_telnet。（方法与**为info文件添加需要的设备类型**相同）
+- 使用Telnet方式巡检时，在info文件内sheet1的deivce_type列中，添加带有Telnet后缀标识的device_type，如：cisco_ios_telnet。（方法与**为info文件添加需要的设备类型**相同）
 - 相应的，sheet2中也需要使用带有Telnet后缀的device_type，如：cisco_ios_telnet，来标识来用巡检此类型设备的巡检命令。（方法与**为info文件添加需要的设备类型**相同）
 
 # 更新日志
