@@ -12,7 +12,7 @@
 
 # 使用方法
 
-## P1、执行准备
+## Step-1、执行准备
 
 - 准备info.xlsx文件，与.exe程序或.py脚本存放于同一目录，文件里应存有需要巡检设备的登录信息和巡检命令。
 
@@ -24,14 +24,14 @@ info文件内sheet2存放用于网络设备巡检输入的命令，如下：
 
 ![sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png)
 
-## P2、exe程序执行（P2与P3任选其一）
+## Step-2、exe程序执行（P2与P3任选其一）
 
 - 在Releases中下载.exe程序。
 - 运行.exe程序，开始巡检。
 
 ![exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png)
 
-## P3、py脚本执行（P2与P3任选其一）
+## Step-3、py脚本执行（P2与P3任选其一）
 
 - 脚本执行需要先安装依赖的第三方库，利用requirements.txt文件，使用下面的命令安装依赖的第三方库。
 
@@ -53,11 +53,11 @@ python devices_inspection.py
 
 # 为info文件添加需要的设备类型
 
-## P1、首先确认Netmiko支持的设备类型
+## Step-1、首先确认Netmiko支持的设备类型
 
 - 访问[Netmiko PLATFORMS](https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md)，查看支持的设备类型。
 
-## P2、添加设备类型进info文件
+## Step-2、添加设备类型进info文件
 
 - 在info文件内sheet1的Device Type列，添加需要的设备类型，并填写正确的登录信息。
 ![add_device_type.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_device_type.png)
@@ -68,7 +68,7 @@ python devices_inspection.py
 
 - Netmiko使用deivce_type后缀的方式来识别使用Telnet方式登录的设备，比如：cisco_ios_telnet，有此后缀的设备Netmiko会自动使用Telnet方式登录。
 - 但Netmiko目前支持Telnet方式登录的设备类型有限，具体可参考[Netmiko PLATFORMS](https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md)官方说明。
-- 使用Telnet方式登录设备时，需要将info文件内sheet1的deivce_type列中，需要使用Telnet方式登录的设备添加后缀，如：cisco_ios_telnet。（方法与**为info文件添加需要的设备类型**相同）
+- 使用Telnet方式巡检时，在info文件内sheet1的deivce_type列中，添加Telnet后缀标识，如：cisco_ios_telnet。（方法与**为info文件添加需要的设备类型**相同）
 - 相应的，sheet2中也需要使用带有Telnet后缀的device_type，如：cisco_ios_telnet，来标识来用巡检此类型设备的巡检命令。（方法与**为info文件添加需要的设备类型**相同）
 
 # 更新日志
