@@ -18,18 +18,18 @@
 
 info文件内sheet1存放被巡检网络设备的登录信息，如下：
 
-[sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
+![sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
 
 info文件内sheet2存放用于网络设备巡检输入的命令，如下：
 
-[sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png)
+![sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png)
 
 ## P2、exe程序执行（P2与P3任选其一）
 
 - 在Releases中下载.exe程序。
 - 运行.exe程序，开始巡检。
 
-[exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png)
+![exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png)
 
 ## P3、py脚本执行（P2与P3任选其一）
 
@@ -60,9 +60,9 @@ python devices_inspection.py
 ## P2、添加设备类型进info文件
 
 - 在info文件内sheet1的Device Type列，添加需要的设备类型，并填写正确的登录信息。
-[add_device_type.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_device_type.png)
+![add_device_type.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_device_type.png)
 - 在info文件内sheet2添加该设备类型对应的巡检命令。
-[add_command.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_command.png)
+![add_command.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_command.png)
 
 # 关于使用Telnet方式登录设备
 
