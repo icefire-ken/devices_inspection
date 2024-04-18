@@ -20,9 +20,9 @@ def get_devices_info(info_file):  # 获取info文件中的设备登录信息
         # 读取Excel文件第一张工作表的数据生成DataFrame
     except FileNotFoundError:  # 如果没有配置info文件或info文件名错误
         print(f'\n没有找到info文件！\n')  # 代表没有找到info文件或info文件名错误
-        for i2 in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-            if i2 > 0:
-                print(f'\r程序将在 {i2} 秒后退出...', end='')
+        for _ in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+            if _ > 0:
+                print(f'\r程序将在 {_} 秒后退出...', end='')
                 time.sleep(1)
             else:
                 print(f'\r程序已退出！', end='')
@@ -40,9 +40,9 @@ def get_cmds_info(info_file):  # 获取info文件中的巡检命令
         # 读取Excel文件第二张工作表的数据生成DataFrame
     except ValueError:  # 捕获异常信息
         print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
-        for i2 in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-            if i2 > 0:
-                print(f'\r程序将在 {i2} 秒后退出...', end='')
+        for _ in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+            if _ > 0:
+                print(f'\r程序将在 {_} 秒后退出...', end='')
                 time.sleep(1)
             else:
                 print(f'\r程序已退出！', end='')
@@ -98,7 +98,7 @@ def inspection(login_info, cmds_dict):
             # 创建当前设备的巡检信息记录文件
             print(f'设备 {login_info["host"]} 正在巡检...')  # 打印当前设备正在巡检提示信息
             for cmd in cmds_dict[login_info['device_type']]:  # 从所有设备类型巡检命令中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
-                if type(cmd) is str:  # 判断读取的命令是否为字符串
+                if type(_) is str:  # 判断读取的命令是否为字符串
                     device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至巡检信息记录文件
                     show = ssh.send_command(cmd, read_timeout=30)  # 执行当前巡检命令，并获取结果，最长等待30s
                     device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至巡检信息记录文件
@@ -134,8 +134,8 @@ if __name__ == '__main__':
         POOL.acquire()  # 从最大线程限制，获取一个线程令牌
         pre_device.start()  # 开启这个线程
 
-    for i in threading_list:  # 遍历所有创建的线程
-        i.join()  # 等待所有线程的结束
+    for _ in threading_list:  # 遍历所有创建的线程
+        _.join()  # 等待所有线程的结束
 
     try:  # 尝试打开01log文件
         with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'r', encoding='utf-8') as log_file:
@@ -145,9 +145,9 @@ if __name__ == '__main__':
     t2 = time.time()  # 程序执行计时结束点
     print(f'\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
     print(f'巡检完成，共巡检 {len(threading_list)} 台设备，{file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。\n')  # 打印巡检报告
-    for i1 in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-        if i1 > 0:
-            print(f'\r程序将在 {i1} 秒后退出...', end='')
+    for _ in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
+        if _ > 0:
+            print(f'\r程序将在 {_} 秒后退出...', end='')
             time.sleep(1)
         else:
             print(f'\r程序已退出！', end='')
