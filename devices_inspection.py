@@ -8,7 +8,7 @@ import pandas
 import threading
 from netmiko import ConnectHandler
 
-INFO_PATH = os.path.join(os.getcwd(), 'info2.xlsx')  # 给定info文件
+INFO_PATH = os.path.join(os.getcwd(), 'info.xlsx')  # 给定info文件
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
 POOL = threading.BoundedSemaphore(100)  # 最大线程控制，当前100个线程可以同时运行
