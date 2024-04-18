@@ -8,7 +8,7 @@ import pandas
 import threading
 from netmiko import ConnectHandler
 
-INFO_PATH = os.path.join(os.getcwd(), 'info.xlsx')  # 给定info文件
+INFO_PATH = os.path.join(os.getcwd(), 'info2.xlsx')  # 给定info文件
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
 POOL = threading.BoundedSemaphore(100)  # 最大线程控制，当前100个线程可以同时运行
@@ -98,7 +98,7 @@ def inspection(login_info, cmds_dict):
             # 创建当前设备的巡检信息记录文件
             print(f'设备 {login_info["host"]} 正在巡检...')  # 打印当前设备正在巡检提示信息
             for cmd in cmds_dict[login_info['device_type']]:  # 从所有设备类型巡检命令中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
-                if type(_) is str:  # 判断读取的命令是否为字符串
+                if type(cmd) is str:  # 判断读取的命令是否为字符串
                     device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至巡检信息记录文件
                     show = ssh.send_command(cmd, read_timeout=30)  # 执行当前巡检命令，并获取结果，最长等待30s
                     device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至巡检信息记录文件
