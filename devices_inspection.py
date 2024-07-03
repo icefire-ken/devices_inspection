@@ -89,6 +89,10 @@ def inspection(login_info, cmds_dict):
                     print(f'设备 {login_info["host"]} Enable密码认证失败！')
                     with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
                         log.write(f'设备 {login_info["host"]} Enable密码认证失败！\n')
+                case 'ConnectionRefusedError':
+                    print(f'设备 {login_info["host"]} 远程登录协议错误！')
+                    with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
+                        log.write(f'设备 {login_info["host"]} 远程登录协议错误！\n')
                 case _:
                     print(f'设备 {login_info["host"]} 未知错误！{type(ssh_error).__name__}')
                     with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
