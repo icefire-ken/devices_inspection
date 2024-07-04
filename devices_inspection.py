@@ -20,7 +20,7 @@ def get_devices_info(info_file):  # 获取info文件中的设备登录信息
         # 读取Excel文件第一张工作表的数据生成DataFrame
     except FileNotFoundError:  # 如果没有配置info文件或info文件名错误
         print(f'\n没有找到info文件！\n')  # 代表没有找到info文件或info文件名错误
-        input('Press Enter to exit.')  # 提示用户按任意键退出
+        input('Press Enter to exit.')  # 提示用户按Enter键退出
         sys.exit(1)  # 异常退出
     else:
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
@@ -35,7 +35,7 @@ def get_cmds_info(info_file):  # 获取info文件中的巡检命令
         # 读取Excel文件第二张工作表的数据生成DataFrame
     except ValueError:  # 捕获异常信息
         print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
-        input('Press Enter to exit.')  # 提示用户按任意键退出
+        input('Press Enter to exit.')  # 提示用户按Enter键退出
         sys.exit(1)  # 异常退出
     else:
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
@@ -141,4 +141,4 @@ if __name__ == '__main__':
     t2 = time.time()  # 程序执行计时结束点
     print(f'\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
     print(f'巡检完成，共巡检 {len(threading_list)} 台设备，{file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。\n')  # 打印巡检报告
-    input('Press Enter to exit.')  # 提示用户按任意键退出
+    input('Press Enter to exit.')  # 提示用户按Enter键退出
