@@ -8,10 +8,10 @@ import pandas
 import threading
 from netmiko import ConnectHandler
 
-INFO_PATH = os.path.join(os.getcwd(), 'info.xlsx')  # 给定info文件
+INFO_PATH = os.path.join(os.getcwd(), 'info2.xlsx')  # 给定info文件
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
-POOL = threading.BoundedSemaphore(100)  # 最大线程控制，当前100个线程可以同时运行
+POOL = threading.BoundedSemaphore(200)  # 最大线程控制，当前100个线程可以同时运行
 
 
 def get_devices_info(info_file):  # 获取info文件中的设备登录信息
@@ -20,12 +20,7 @@ def get_devices_info(info_file):  # 获取info文件中的设备登录信息
         # 读取Excel文件第一张工作表的数据生成DataFrame
     except FileNotFoundError:  # 如果没有配置info文件或info文件名错误
         print(f'\n没有找到info文件！\n')  # 代表没有找到info文件或info文件名错误
-        for _ in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-            if _ > 0:
-                print(f'\r程序将在 {_} 秒后退出...', end='')
-                time.sleep(1)
-            else:
-                print(f'\r程序已退出！', end='')
+        input('Press any key to exit.')  # 提示用户按任意键退出
         sys.exit(1)  # 异常退出
     else:
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
@@ -40,12 +35,7 @@ def get_cmds_info(info_file):  # 获取info文件中的巡检命令
         # 读取Excel文件第二张工作表的数据生成DataFrame
     except ValueError:  # 捕获异常信息
         print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
-        for _ in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-            if _ > 0:
-                print(f'\r程序将在 {_} 秒后退出...', end='')
-                time.sleep(1)
-            else:
-                print(f'\r程序已退出！', end='')
+        input('Press any key to exit.')  # 提示用户按任意键退出
         sys.exit(1)  # 异常退出
     else:
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
@@ -100,14 +90,16 @@ def inspection(login_info, cmds_dict):
     else:  # 如果登录正常，开始巡检
         with open(os.path.join(os.getcwd(), LOCAL_TIME, login_info['host'] + '.log'), 'w', encoding='utf-8') as device_log_file:
             # 创建当前设备的巡检信息记录文件
-            print(f'设备 {login_info["host"]} 正在巡检...')  # 打印当前设备正在巡检提示信息
+            with LOCK:  # 线程锁
+                print(f'设备 {login_info["host"]} 正在巡检...')  # 打印当前设备正在巡检提示信息
             for cmd in cmds_dict[login_info['device_type']]:  # 从所有设备类型巡检命令中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
                 if type(cmd) is str:  # 判断读取的命令是否为字符串
                     device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至巡检信息记录文件
                     show = ssh.send_command(cmd, read_timeout=30)  # 执行当前巡检命令，并获取结果，最长等待30s
                     device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至巡检信息记录文件
         t12 = time.time()  # 子线程执行计时结束点
-        print(f'设备 {login_info["host"]} 巡检完成，用时 {round(t12 - t11, 1)} 秒。')  # 打印子线程执行时长
+        with LOCK:  # 线程锁
+            print(f'设备 {login_info["host"]} 巡检完成，用时 {round(t12 - t11, 1)} 秒。')  # 打印子线程执行时长
     finally:  # 最后结束SSH连接释放线程
         if ssh is not None:  # 判断ssh对象是否被正确赋值，赋值成功不为None，即SSH连接已建立，需要关闭连接
             ssh.disconnect()  # 关闭SSH连接
@@ -149,9 +141,4 @@ if __name__ == '__main__':
     t2 = time.time()  # 程序执行计时结束点
     print(f'\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
     print(f'巡检完成，共巡检 {len(threading_list)} 台设备，{file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。\n')  # 打印巡检报告
-    for _ in range(5, -1, -1):  # 等待5秒退出程序，为工程师留有充分的时间，查看CMD中的输出信息
-        if _ > 0:
-            print(f'\r程序将在 {_} 秒后退出...', end='')
-            time.sleep(1)
-        else:
-            print(f'\r程序已退出！', end='')
+    input('Press any key to exit.')  # 提示用户按任意键退出
