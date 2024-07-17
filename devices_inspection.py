@@ -8,7 +8,7 @@ import pandas
 import threading
 from netmiko import ConnectHandler
 
-FILENAME = input("请输入info文件名（默认为 info.xlsx）：") or "info.xlsx"  # 指定info文件名称
+FILENAME = input(f"\n请输入info文件名（默认为 info.xlsx）：") or "info.xlsx"  # 指定info文件名称
 INFO_PATH = os.path.join(os.getcwd(), FILENAME)  # 读取info文件路径
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
@@ -125,7 +125,9 @@ if __name__ == '__main__':
             pass  # 跳过，不做处理
 
     for device_info in devices_info:  # 遍历所有设备登录信息
-        pre_device = threading.Thread(target=inspection, args=(device_info, cmds_info))
+        updated_device_info = device_info.copy()  # 创建一个更新后的设备登录信息字典，用于传参
+        updated_device_info["conn_timeout"] = 30  # 更新设备登录信息字典，设置TCP连接超时时间为30s
+        pre_device = threading.Thread(target=inspection, args=(updated_device_info, cmds_info))
         # 创建一个线程，执行inspection函数，传入当前遍历的设备登录信息和所有设备类型巡检命令
         threading_list.append(pre_device)  # 将当前创建的线程追加进线程列表
         POOL.acquire()  # 从最大线程限制，获取一个线程令牌
