@@ -126,7 +126,7 @@ if __name__ == '__main__':
 
     for device_info in devices_info:  # 遍历所有设备登录信息
         updated_device_info = device_info.copy()  # 创建一个更新后的设备登录信息字典，用于传参
-        updated_device_info["conn_timeout"] = 30  # 更新设备登录信息字典，设置TCP连接超时时间为30s
+        updated_device_info["conn_timeout"] = 40  # 更新设备登录信息字典，设置TCP连接超时时间
         pre_device = threading.Thread(target=inspection, args=(updated_device_info, cmds_info))
         # 创建一个线程，执行inspection函数，传入当前遍历的设备登录信息和所有设备类型巡检命令
         threading_list.append(pre_device)  # 将当前创建的线程追加进线程列表
