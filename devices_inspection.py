@@ -12,7 +12,7 @@ FILENAME = input(f"\n请输入info文件名（默认为 info.xlsx）：") or "in
 INFO_PATH = os.path.join(os.getcwd(), FILENAME)  # 读取info文件路径
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
-POOL = threading.BoundedSemaphore(200)  # 最大线程控制，当前100个线程可以同时运行
+POOL = threading.BoundedSemaphore(200)  # 最大线程控制
 
 
 def get_devices_info(info_file):  # 获取info文件中的设备登录信息
