@@ -7,6 +7,7 @@ import time
 import pandas
 import threading
 from netmiko import ConnectHandler
+from netmiko import exceptions
 
 FILENAME = input(f"\n请输入info文件名（默认为 info.xlsx）：") or "info.xlsx"  # 指定info文件名称
 INFO_PATH = os.path.join(os.getcwd(), FILENAME)  # 读取info文件路径
@@ -96,8 +97,13 @@ def inspection(login_info, cmds_dict):
             for cmd in cmds_dict[login_info['device_type']]:  # 从所有设备类型巡检命令中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
                 if type(cmd) is str:  # 判断读取的命令是否为字符串
                     device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至巡检信息记录文件
-                    show = ssh.send_command(cmd, read_timeout=120)  # 执行当前巡检命令，并获取结果，并设置最长等待时间
-                    device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至巡检信息记录文件
+                    try:
+                        show = ssh.send_command(cmd, read_timeout=120)  # 尝试执行当前巡检命令，获取结果，并设置最长等待时间
+                    except exceptions.ReadTimeout:  # 捕获超时异常
+                        print(f'设备 {login_info["host"]} 命令 {cmd} 执行超时！')  # cmd输出命令执行超时提示信息
+                        show = f'命令 {cmd} 执行超时！'  # 赋值命令执行超市结果
+                    finally:  # 最终将结果写入巡检信息记录文件
+                        device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至巡检信息记录文件
         t12 = time.time()  # 子线程执行计时结束点
         with LOCK:  # 线程锁
             print(f'设备 {login_info["host"]} 巡检完成，用时 {round(t12 - t11, 1)} 秒。')  # 打印子线程执行时长
@@ -127,8 +133,8 @@ if __name__ == '__main__':
     for device_info in devices_info:  # 遍历所有设备登录信息
         updated_device_info = device_info.copy()  # 创建一个更新后的设备登录信息字典，用于传参
         updated_device_info["conn_timeout"] = 40  # 更新设备登录信息字典，设置TCP连接超时时间
-        pre_device = threading.Thread(target=inspection, args=(updated_device_info, cmds_info))
-        # 创建一个线程，执行inspection函数，传入当前遍历的设备登录信息和所有设备类型巡检命令
+        pre_device = threading.Thread(target=inspection, args=(updated_device_info, cmds_info), name=device_info['host'] + '_Thread')
+        # 创建一个线程，执行inspection函数，传入当前遍历的设备登录信息和所有设备类型巡检命令，并定义线程名称
         threading_list.append(pre_device)  # 将当前创建的线程追加进线程列表
         POOL.acquire()  # 从最大线程限制，获取一个线程令牌
         pre_device.start()  # 开启这个线程
