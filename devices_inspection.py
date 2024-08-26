@@ -97,10 +97,10 @@ def inspection(login_info, cmds_dict):
             for cmd in cmds_dict[login_info['device_type']]:  # 从所有设备类型巡检命令中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
                 if type(cmd) is str:  # 判断读取的命令是否为字符串
                     device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至巡检信息记录文件
-                    try:
-                        show = ssh.send_command(cmd, read_timeout=120)  # 尝试执行当前巡检命令，获取结果，并设置最长等待时间
-                    except exceptions.ReadTimeout:  # 捕获超时异常
-                        print(f'设备 {login_info["host"]} 命令 {cmd} 执行超时！')  # cmd输出命令执行超时提示信息
+                    try:  # 尝试执行当前巡检命令，获取结果，并设置最长等待时间
+                        show = ssh.send_command(cmd, read_timeout=120)
+                    except exceptions.ReadTimeout:  # 如果等待时间依然超时，捕获异常并提示、记录
+                        print(f'设备 {login_info["host"]} 命令 {cmd} 执行超时！')  # cmd输出命令执行超时提示
                         show = f'命令 {cmd} 执行超时！'  # 赋值结果，在巡检记录log文件中提示此命令执行超时
                     finally:  # 最终将结果写入巡检信息记录文件
                         device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至巡检信息记录文件
