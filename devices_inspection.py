@@ -101,7 +101,7 @@ def inspection(login_info, cmds_dict):
                         show = ssh.send_command(cmd, read_timeout=120)  # 尝试执行当前巡检命令，获取结果，并设置最长等待时间
                     except exceptions.ReadTimeout:  # 捕获超时异常
                         print(f'设备 {login_info["host"]} 命令 {cmd} 执行超时！')  # cmd输出命令执行超时提示信息
-                        show = f'命令 {cmd} 执行超时！'  # 赋值命令执行超市结果
+                        show = f'命令 {cmd} 执行超时！'  # 赋值结果，在巡检记录log文件中提示此命令执行超时
                     finally:  # 最终将结果写入巡检信息记录文件
                         device_log_file.write(show + '\n\n')  # 写入当前巡检命令的结果，至巡检信息记录文件
         t12 = time.time()  # 子线程执行计时结束点
