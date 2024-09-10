@@ -125,7 +125,7 @@ if __name__ == '__main__':
     if not os.path.exists(LOCAL_TIME):  # 判断是否存在有同日期的文件夹（判断当天是否执行过巡检）
         os.makedirs(LOCAL_TIME)  # 如果没有，创建当天日期文件夹
     else:  # 如果有
-        try:  # 尝试删除记录巡检设备异常的记录文件，即01log文件
+        try:  # 尝试删除记录巡检设备异常的文件，即01log文件
             os.remove(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'))  # 删除01log文件
         except FileNotFoundError:  # 如果没有01log文件（之前执行巡检没有发生异常）
             pass  # 跳过，不做处理
