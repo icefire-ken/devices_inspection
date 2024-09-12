@@ -17,9 +17,8 @@ POOL = threading.BoundedSemaphore(200)  # 最大线程控制
 
 
 def get_devices_info(info_file):  # 获取info文件中的设备登录信息
-    try:
+    try:  # 读取Excel文件第一张工作表的数据生成DataFrame
         devices_dataframe = pandas.read_excel(info_file, sheet_name=0, dtype=str, keep_default_na=False)
-        # 读取Excel文件第一张工作表的数据生成DataFrame
     except FileNotFoundError:  # 如果没有配置info文件或info文件名错误
         print(f'\n没有找到info文件！\n')  # 代表没有找到info文件或info文件名错误
         input('输入Enter退出。')  # 提示用户按Enter键退出
@@ -32,9 +31,8 @@ def get_devices_info(info_file):  # 获取info文件中的设备登录信息
 
 
 def get_cmds_info(info_file):  # 获取info文件中的巡检命令
-    try:
+    try:  # 读取Excel文件第二张工作表的数据生成DataFrame
         cmds_dataframe = pandas.read_excel(info_file, sheet_name=1, dtype=str)
-        # 读取Excel文件第二张工作表的数据生成DataFrame
     except ValueError:  # 捕获异常信息
         print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
         input('输入Enter退出。')  # 提示用户按Enter键退出
