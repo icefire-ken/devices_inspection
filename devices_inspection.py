@@ -92,6 +92,8 @@ def inspection(login_info, cmds_dict):
             # 创建当前设备的巡检信息记录文件
             with LOCK:  # 线程锁
                 print(f'设备 {login_info["host"]} 正在巡检...')  # 打印当前设备正在巡检提示信息
+            device_log_file.write('=' * 10 + ' ' + 'Local Time' + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检时间
+            device_log_file.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + '\n\n')  # 写入当前巡检时间
             for cmd in cmds_dict[login_info['device_type']]:  # 从所有设备类型巡检命令中找到与当前设备类型匹配的命令列表，遍历所有巡检命令
                 if type(cmd) is str:  # 判断读取的命令是否为字符串
                     device_log_file.write('=' * 10 + ' ' + cmd + ' ' + '=' * 10 + '\n\n')  # 写入当前巡检命令分行符，至巡检信息记录文件
