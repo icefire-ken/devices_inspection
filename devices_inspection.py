@@ -122,12 +122,12 @@ if __name__ == '__main__':
     print(f'\n巡检开始...')  # 提示巡检开始
     print(f'\n' + '>' * 40 + '\n')  # 打印一行“>”，隔开巡检提示信息
 
-    if not os.path.exists(LOCAL_TIME):  # 判断是否存在有同日期的文件夹（判断当天是否执行过巡检）
+    if not os.path.exists(LOCAL_TIME):  # 判断是否存在当前日期的文件夹，判断当天是否执行过巡检
         os.makedirs(LOCAL_TIME)  # 如果没有，创建当天日期文件夹
     else:  # 如果有
         try:  # 尝试删除记录巡检设备异常的文件，即01log文件
             os.remove(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'))  # 删除01log文件
-        except FileNotFoundError:  # 如果没有01log文件（之前执行巡检没有发生异常）
+        except FileNotFoundError:  # 如果没有01log文件，表示之前执行巡检没有发生异常
             pass  # 跳过，不做处理
 
     for device_info in devices_info:  # 遍历所有设备登录信息
@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
     try:  # 尝试打开01log文件
         with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'r', encoding='utf-8') as log_file:
-            file_lines = len(log_file.readlines())  # 读取01log文件共有多少行（有多少行，代表出现了多少个设备登录异常）
+            file_lines = len(log_file.readlines())  # 读取01log文件共有多少行。有多少行，代表出现了多少个设备登录异常
     except FileNotFoundError:  # 如果找不到01log文件
         file_lines = 0  # 证明本次巡检没有出现巡检异常情况
     t2 = time.time()  # 程序执行计时结束点
