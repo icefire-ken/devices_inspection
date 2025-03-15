@@ -73,7 +73,7 @@ python devices_inspection.py
 
 # 关于加密info文件的方式
 
-![encrypt_1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png){: width="600" height="400"}
+![encrypt_1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png =500x500)
 
 ![encrypt_2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_2.png)
 
