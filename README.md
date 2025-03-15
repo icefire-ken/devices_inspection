@@ -18,18 +18,18 @@
 
 info文件内sheet1存放被巡检网络设备的登录信息，如下：
 
-![sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png)
+![sheet1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet1.png?raw=true)
 
 info文件内sheet2存放用于网络设备巡检输入的命令，如下：
 
-![sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png)
+![sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png?raw=true)
 
 ## Step-2、exe程序执行（P2与P3任选其一）
 
 - 在Releases中下载.exe程序。
 - 运行.exe程序，开始巡检。
 
-![exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png)
+![exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png?raw=true)
 
 ## Step-3、py脚本执行（P2与P3任选其一）
 
@@ -60,9 +60,9 @@ python devices_inspection.py
 ## Step-2、添加设备类型进info文件
 
 - 在info文件内sheet1的Device Type列，添加需要的设备类型，并填写正确的登录信息。
-![add_device_type.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_device_type.png)
+![add_device_type.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_device_type.png?raw=true)
 - 在info文件内sheet2添加该设备类型对应的巡检命令。
-![add_command.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_command.png)
+![add_command.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/add_command.png?raw=true)
 
 # 关于使用Telnet方式登录设备
 
@@ -73,11 +73,15 @@ python devices_inspection.py
 
 # 关于加密info文件的方式
 
-![encrypt_1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png?raw=true)
+- 想要为info文件加密，请参照下面的方法。
+- 依次点击文件-信息-保护工作薄-用密码进行加密。
+- 输入密码，并再次确认密码即可。
 
-![encrypt_2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_2.png)
+![encrypt_1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png?raw=true&width=600px)
 
-![encrypt_3.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_3.png)
+![encrypt_2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_2.png?raw=true&width=600px)
+
+![encrypt_3.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_3.png?raw=true&width=600px)
 
 # 更新日志
 
