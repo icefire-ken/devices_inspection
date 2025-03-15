@@ -77,14 +77,11 @@ python devices_inspection.py
 - 依次点击文件-信息-保护工作薄-用密码进行加密。
 - 输入密码，并再次确认密码即可。
 
+<img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png" width="400" />
 
-<img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png" width="100" />
+<img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_2.png" width="400" />
 
-![encrypt_1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png?raw=true)
-
-![encrypt_2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_2.png?raw=true)
-
-![encrypt_3.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_3.png?raw=true)
+<img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_3.png" width="400" />
 
 # 更新日志
 
