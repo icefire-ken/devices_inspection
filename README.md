@@ -71,6 +71,14 @@ python devices_inspection.py
 - 使用Telnet方式巡检时，在info文件内sheet1的deivce_type列中，添加带有Telnet后缀标识的device_type，如：cisco_ios_telnet。（方法与**为info文件添加需要的设备类型**相同）
 - 相应的，sheet2中也需要使用带有Telnet后缀的device_type，如：cisco_ios_telnet，来标识来用巡检此类型设备的巡检命令。（方法与**为info文件添加需要的设备类型**相同）
 
+# 关于加密info文件的方式
+
+![encrypt_1.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png)
+
+![encrypt_2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_2.png)
+
+![encrypt_3.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_3.png)
+
 # 更新日志
 
 详见[UPDATE.md](https://github.com/icefire-ken/devices_inspection/blob/main/UPDATE.md)。
