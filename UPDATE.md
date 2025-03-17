@@ -1,8 +1,16 @@
 # 更新日志
 
-## 待更新
+## 2025.03.17
 
-- 对加密Excel文件的支持。
+- 修改了读取info文件的代码逻辑。
+- 增加了对加密info文件（Excel.xlsx文件）的支持。输入密码时有隐式输入处理，避免肩窥泄露密码。
+- 加密方式：
+
+<img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png" width="400" />
+
+<img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_2.png" width="400" />
+
+<img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_3.png" width="400" />
 
 ## 2024.09.13
 

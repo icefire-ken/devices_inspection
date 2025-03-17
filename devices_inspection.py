@@ -1,13 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
+
 import os
 import sys
 import time
-import pandas
+import getpass
 import threading
+import msoffcrypto
+import pandas as pd
+from io import BytesIO
 from netmiko import ConnectHandler
 from netmiko import exceptions
+
+
+# 自定义异常类，用于处理输入密码为None情况
+class PasswordRequiredError(Exception):
+    """文件受密码保护，必须提供密码"""
+    pass
+
 
 FILENAME = input(f"\n请输入info文件名（默认为 info.xlsx）：") or "info.xlsx"  # 指定info文件名称
 INFO_PATH = os.path.join(os.getcwd(), FILENAME)  # 读取info文件路径
@@ -16,34 +27,102 @@ LOCK = threading.Lock()  # 线程锁实例化
 POOL = threading.BoundedSemaphore(200)  # 最大线程控制
 
 
-def get_devices_info(info_file):  # 获取info文件中的设备登录信息
-    try:  # 读取Excel文件第一张工作表的数据生成DataFrame
-        devices_dataframe = pandas.read_excel(info_file, sheet_name=0, dtype=str, keep_default_na=False)
+# 判断info文件是否被加密，使用不同的读取方式
+def read_info():
+    if is_encrypted(INFO_PATH):
+        return read_encrypted_file(INFO_PATH)  # 读取被加密info文件
+    else:
+        return read_unencrypted_file(INFO_PATH)  # 读取未加密info文件
+
+
+# 检测info文件是否被加密
+def is_encrypted(info_file: str) -> bool:
+    try:
+        with open(info_file, "rb") as f:
+            return msoffcrypto.OfficeFile(f).is_encrypted()  # 检测info文件是否被加密
+    except Exception:
+        return False
+
+
+# 读取被加密info文件
+def read_encrypted_file(info_file: str, max_retry: int = 3) -> pd.DataFrame:
+    retry_count = 0  # 初始化重试计数器，用于记录用户尝试输入密码的次数
+    while retry_count < max_retry:  # 当重试次数小于最大允许重试次数时，继续循环
+        try:
+            password = getpass.getpass("\ninfo文件被加密，请输入密码：") or None  # 提示用户输入密码，隐式输入。如果用户直接按Enter键，password将为None
+            if not password:  # 如果用户没有输入密码
+                raise PasswordRequiredError("文件受密码保护，必须提供密码！")  # 抛出自定义异常，提示用户必须提供密码
+
+            # 解密文件
+            decrypted_data = BytesIO()  # 创建一个BytesIO对象，用于在内存中存储解密后的文件内容
+            # BytesIO是一个内存中的二进制流，可以像文件一样进行读写操作
+            with open(info_file, "rb") as f:  # 以二进制只读模式打开加密的info文件
+                office_file = msoffcrypto.OfficeFile(f)  # 使用msoffcrypto库创建一个OfficeFile对象，表示加密的Office文件
+                office_file.load_key(password=password)  # 使用用户提供的密码加载解密密钥
+                office_file.decrypt(decrypted_data)  # 解密文件内容，并将解密后的数据写入decrypted_data对象中
+            decrypted_data.seek(0)  # 将decrypted_data的指针重置到起始位置，以便后续读取操作
+            # 由于解密后的数据已经写入decrypted_data，需要将指针重置到开头，以便后续读取
+
+            # 读取解密后的文件
+            devices_dataframe = pd.read_excel(decrypted_data, sheet_name=0, dtype=str, keep_default_na=False)
+            cmds_dataframe = pd.read_excel(decrypted_data, sheet_name=1, dtype=str)
+
+        except FileNotFoundError:  # 如果没有配置info文件或info文件名错误
+            print(f'\n没有找到info文件！\n')  # 提示用户没有找到info文件或info文件名错误
+            input('输入Enter退出！')  # 提示用户按Enter键退出
+            sys.exit(1)  # 异常退出
+        except ValueError:  # 捕获异常信息
+            print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
+            input('输入Enter退出！')  # 提示用户按Enter键退出
+            sys.exit(1)  # 异常退出
+        except (msoffcrypto.exceptions.InvalidKeyError, PasswordRequiredError) as e:
+            retry_count += 1
+            if retry_count < max_retry:
+                print(f"\n密码错误，请重新输入！（剩余尝试次数：{max_retry - retry_count}）")
+            else:
+                input("\n超过最大尝试次数，输入Enter退出！")
+                sys.exit(1)
+        except Exception as e:
+            print(f"\n解密失败：{str(e)}")
+            sys.exit(1)
+        else:
+            devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
+            # "records"参数规定外层为列表，内层以列标题为key，以此列的行内容为value的字典
+            # 若有多列，代表字典内有多个key:value对；若有多行，每行为一个字典
+
+            cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
+            # "list"参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
+            # 若有多列，代表字典内有多个key:value对
+
+            return devices_dict, cmds_dict
+
+
+# 读取未加密info文件
+def read_unencrypted_file(info_file: str) -> pd.DataFrame:
+    try:
+        devices_dataframe = pd.read_excel(info_file, sheet_name=0, dtype=str, keep_default_na=False)
+        cmds_dataframe = pd.read_excel(info_file, sheet_name=1, dtype=str)
     except FileNotFoundError:  # 如果没有配置info文件或info文件名错误
         print(f'\n没有找到info文件！\n')  # 代表没有找到info文件或info文件名错误
-        input('输入Enter退出。')  # 提示用户按Enter键退出
+        input('输入Enter退出！')  # 提示用户按Enter键退出
+        sys.exit(1)  # 异常退出
+    except ValueError:  # 捕获异常信息
+        print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
+        input('输入Enter退出！')  # 提示用户按Enter键退出
         sys.exit(1)  # 异常退出
     else:
         devices_dict = devices_dataframe.to_dict('records')  # 将DataFrame转换成字典
         # "records"参数规定外层为列表，内层以列标题为key，以此列的行内容为value的字典
         # 若有多列，代表字典内有多个key:value对；若有多行，每行为一个字典
-        return devices_dict
 
-
-def get_cmds_info(info_file):  # 获取info文件中的巡检命令
-    try:  # 读取Excel文件第二张工作表的数据生成DataFrame
-        cmds_dataframe = pandas.read_excel(info_file, sheet_name=1, dtype=str)
-    except ValueError:  # 捕获异常信息
-        print(f'\ninfo文件缺失子表格信息！\n')  # 代表info文件缺失子表格信息
-        input('输入Enter退出。')  # 提示用户按Enter键退出
-        sys.exit(1)  # 异常退出
-    else:
         cmds_dict = cmds_dataframe.to_dict('list')  # 将DataFrame转换成字典
         # "list"参数规定外层为字典，列标题为key，列下所有行内容以list形式为value的字典
         # 若有多列，代表字典内有多个key:value对
-        return cmds_dict
+
+        return devices_dict, cmds_dict
 
 
+# 巡检
 def inspection(login_info, cmds_dict):
     # 使用传入的设备登录信息和巡检命令，登录设备依次输入巡检命令，如果设备登录出现异常，生成01log文件记录。
     t11 = time.time()  # 子线程执行计时起始点
@@ -84,9 +163,9 @@ def inspection(login_info, cmds_dict):
                     with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
                         log.write(f'设备 {login_info["host"]} 远程登录协议错误！\n')
                 case _:
-                    print(f'设备 {login_info["host"]} 未知错误！{type(ssh_error).__name__}')
+                    print(f'设备 {login_info["host"]} 未知错误！{type(ssh_error).__name__}: {str(ssh_error)}')
                     with open(os.path.join(os.getcwd(), LOCAL_TIME, '01log.log'), 'a', encoding='utf-8') as log:
-                        log.write(f'设备 {login_info["host"]} 未知错误！{type(ssh_error).__name__}\n')
+                        log.write(f'设备 {login_info["host"]} 未知错误！{type(ssh_error).__name__}: {str(ssh_error)}\n')
     else:  # 如果登录正常，开始巡检
         with open(os.path.join(os.getcwd(), LOCAL_TIME, login_info['host'] + '.log'), 'w', encoding='utf-8') as device_log_file:
             # 创建当前设备的巡检信息记录文件
@@ -116,8 +195,7 @@ def inspection(login_info, cmds_dict):
 if __name__ == '__main__':
     t1 = time.time()  # 程序执行计时起始点
     threading_list = []  # 创建一个线程列表，准备存放所有线程
-    devices_info = get_devices_info(INFO_PATH)  # 读取所有设备的登录信息
-    cmds_info = get_cmds_info(INFO_PATH)  # 读取所有设备类型的巡检命令
+    devices_info, cmds_info = read_info()  # 读取info文件，获取设备登录信息和命令信息
 
     print(f'\n巡检开始...')  # 提示巡检开始
     print(f'\n' + '>' * 40 + '\n')  # 打印一行“>”，隔开巡检提示信息
@@ -150,4 +228,4 @@ if __name__ == '__main__':
     t2 = time.time()  # 程序执行计时结束点
     print(f'\n' + '<' * 40 + '\n')  # 打印一行“<”，隔开巡检报告信息
     print(f'巡检完成，共巡检 {len(threading_list)} 台设备，{file_lines} 台异常，共用时 {round(t2 - t1, 1)} 秒。\n')  # 打印巡检报告
-    input('输入Enter退出。')  # 提示用户按Enter键退出
+    input('输入Enter退出！')  # 提示用户按Enter键退出

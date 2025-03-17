@@ -24,16 +24,16 @@ info文件内sheet2存放用于网络设备巡检输入的命令，如下：
 
 ![sheet2.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/sheet2.png?raw=true)
 
-## Step-2、exe程序执行（P2与P3任选其一）
+## Step-2、exe程序执行（Step-2与Step-3任选其一）
 
 - 在Releases中下载.exe程序。
 - 运行.exe程序，开始巡检。
 
 ![exe.png](https://github.com/icefire-ken/devices_inspection/blob/main/images/exe.png?raw=true)
 
-## Step-3、py脚本执行（P2与P3任选其一）
+## Step-3、py脚本执行（Step-2与Step-3任选其一）
 
-- 脚本执行需要先安装依赖的第三方库，利用requirements.txt文件，使用下面的命令安装依赖的第三方库。
+- py脚本执行需要先安装python环境与依赖的第三方库，利用requirements.txt文件，使用下面的命令安装依赖的第三方库。
 
 ```python
 pip install -r requirements.txt
