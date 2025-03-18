@@ -75,7 +75,7 @@ python devices_inspection.py
 
 - 想要为info文件加密，请参照下面的方法。
 - 依次点击文件-信息-保护工作薄-用密码进行加密。
-- 输入密码，并再次确认密码即可。。
+- 输入密码，并再次确认密码即可。。.
 
 <img src="https://github.com/icefire-ken/devices_inspection/blob/main/images/encrypt_1.png" width="400" />
 
