@@ -30,6 +30,17 @@ POOL = threading.BoundedSemaphore(200)  # 最大线程控制
 
 @contextmanager
 def suppress_stderr():
+    """
+    临时屏蔽 stderr 输出（仅用于抑制 Paramiko 在 SSH 连接失败时
+    输出的 'Error reading SSH protocol banner' 等底层 traceback）。
+
+    说明：
+    - Paramiko 的 Transport 在独立线程中会直接向 stderr 打印异常，
+      try/except 无法捕获这些输出。
+    - 本方法仅用于“连接 / enable 阶段”，不影响异常本身的抛出。
+    - Netmiko 的异常类型和业务逻辑仍然正常生效。
+    - 禁止将此上下文扩大到命令执行阶段，否则会影响调试。
+    """
     with open(os.devnull, 'w') as devnull:
         old_stderr = sys.stderr
         sys.stderr = devnull
@@ -141,6 +152,8 @@ def inspection(login_info, cmds_dict):
     ssh = None  # 初始化ssh对象
 
     try:  # 尝试登录设备
+        # 仅在连接阶段使用 suppress_stderr，
+        # 用于屏蔽 Paramiko 在目标不可达/非 SSH 服务时输出的噪音 traceback
         with suppress_stderr():
             ssh = ConnectHandler(**login_info)  # 使用设备登录信息，SSH登录设备
             # ssh.enable()  # 进入设备Enable模式
