@@ -12,6 +12,7 @@ import pandas as pd
 from io import BytesIO
 from netmiko import ConnectHandler
 from netmiko import exceptions
+from contextlib import contextmanager
 
 
 # 自定义异常类，用于处理输入密码为None情况
@@ -25,6 +26,17 @@ INFO_PATH = os.path.join(os.getcwd(), FILENAME)  # 读取info文件路径
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
 POOL = threading.BoundedSemaphore(200)  # 最大线程控制
+
+
+@contextmanager
+def suppress_stderr():
+    with open(os.devnull, 'w') as devnull:
+        old_stderr = sys.stderr
+        sys.stderr = devnull
+        try:
+            yield
+        finally:
+            sys.stderr = old_stderr
 
 
 # 判断info文件是否被加密，使用不同的读取方式
@@ -129,8 +141,9 @@ def inspection(login_info, cmds_dict):
     ssh = None  # 初始化ssh对象
 
     try:  # 尝试登录设备
-        ssh = ConnectHandler(**login_info)  # 使用设备登录信息，SSH登录设备
-        ssh.enable()  # 进入设备Enable模式
+        with suppress_stderr():
+            ssh = ConnectHandler(**login_info)  # 使用设备登录信息，SSH登录设备
+            # ssh.enable()  # 进入设备Enable模式
     except Exception as ssh_error:  # 登录设备出现异常
         with LOCK:  # 线程锁
             match type(ssh_error).__name__:  # 匹配异常名称
