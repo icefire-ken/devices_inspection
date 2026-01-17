@@ -15,17 +15,17 @@ from netmiko import exceptions
 from contextlib import contextmanager
 
 
-# 自定义异常类，用于处理输入密码为None情况
-class PasswordRequiredError(Exception):
-    """文件受密码保护，必须提供密码"""
-    pass
-
-
 FILENAME = input(f"\n请输入info文件名（默认为 info.xlsx）：") or "info.xlsx"  # 指定info文件名称
 INFO_PATH = os.path.join(os.getcwd(), FILENAME)  # 读取info文件路径
 LOCAL_TIME = time.strftime('%Y.%m.%d', time.localtime())  # 读取当前日期
 LOCK = threading.Lock()  # 线程锁实例化
 POOL = threading.BoundedSemaphore(200)  # 最大线程控制
+
+
+# 自定义异常类，用于处理输入密码为None情况
+class PasswordRequiredError(Exception):
+    """文件受密码保护，必须提供密码"""
+    pass
 
 
 @contextmanager
@@ -229,9 +229,9 @@ if __name__ == '__main__':
     if not os.path.exists(LOCAL_TIME):  # 判断是否存在当前日期的文件夹，判断当天是否执行过巡检
         os.makedirs(LOCAL_TIME)  # 如果没有，创建当天日期文件夹
     else:  # 如果有，则清空文件夹内所有文件
-        for filename in os.listdir(LOCAL_TIME):
-            file_path = os.path.join(LOCAL_TIME, filename)
-            os.remove(file_path)
+        for filename in os.listdir(LOCAL_TIME):  # 遍历当前日期文件夹内所有文件
+            file_path = os.path.join(LOCAL_TIME, filename)  # 构建当前文件的完整路径
+            os.remove(file_path)  # 删除当前文件
 
     for device_info in devices_info:  # 遍历所有设备登录信息
         updated_device_info = device_info.copy()  # 创建一个更新后的设备登录信息字典，用于传参
